@@ -30,28 +30,28 @@ text, letters, arabic script, subtitles, watermark, logo, signature, people, han
 
 ## Scene 1 · The Loom & Foundation · البداية والنسيج
 **00:00–00:06** · F0–F179 @30fps  
-On-screen text: ثلاثة ألوان... تروي قصة مجد  (in 00:00.5, out 00:05.7)
+On-screen text: ثلاثة ألوان... تروي قصة مجد  (in 00:00.5, out 00:05.7) · macro dive + red cords lift from 00:04.4
 
 ### Midjourney v6 — START keyframe
 ```
-Extreme macro photograph of coarse natural burlap hessian fabric filling the entire vertical frame, warm sand-beige jute basket weave (#D9C7B2, #C4AE94) with fuzzy fibers, three loose skeins of thick crimson red (#DB161B) wool, emerald green (#008000) wool and lustrous pure white silk thread entering from the right edge, frayed thread ends, soft warm raking side light, floating dust motes, shallow depth of field, tactile handcrafted textile art, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716
+Overhead macro photograph of coarse natural burlap hessian with a high-relief basket weave and visible stitch holes, warm beige jute (#D9C7B2, #C4AE94), a silver embroidery needle threaded with a chunky twisted crimson red (#DB161B) yarn cord beginning the first diagonal stitch, coils of thick twisted pure white and emerald green (#008000) cords waiting at the edge, soft warm side light, fuzzy wool fibres, shallow depth of field, tactile handcrafted textile art, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716
 ```
 
 ### Midjourney v6 — END keyframe
 ```
-Extreme macro photograph of a tight woven band of pure white, crimson red (#DB161B) and emerald green (#008000) wool and silk threads interlaced over and under the natural burlap warp, three stacked horizontal color bands like a handwoven loom sample, the red strands in the middle gently lifting upward as if alive, glowing golden rim light along the fibers, loose floating fibers, shallow depth of field, handcrafted Omani textile art, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716
+Overhead macro photograph of the flag of the Sultanate of Oman hand-embroidered into coarse natural burlap with chunky twisted multi-ply yarn cords, set at a slight organic angle: a vertical crimson red (#DB161B) hoist band (one third of the length) stitched in thick diagonal herringbone satin stitches with the white khanjar and crossed-swords emblem embroidered in its upper part, and three equal horizontal bands of thick parallel twisted cords to the right: pure white on top, crimson red in the middle, emerald green (#008000) at the bottom, cords entering and exiting visible burlap stitch holes, fuzzy wool micro-fibres, deep soft shadows, warm natural light, only red, white and green yarn, no black, tactile handcrafted textile art, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716
 ```
 
 ### Kling AI / Runway Gen-3 — image-to-video (Start → End)
 ```
-Start frame: S1 START. End frame: S1 END. One continuous slow dolly push-in on the Z axis (about 8% over the shot), no cuts. Crimson, white and emerald threads glide in from right to left and weave over-and-under the burlap warp in a steady rhythmic loom motion, each strand dipping beneath the jute ribs; individual fibers quiver; dust motes drift through warm side light; in the final second the red strands lift slightly upward. Macro lens, shallow depth of field, organic, tactile, cinematic, 24 fps.
+Start frame: S1 START. End frame: S1 END. Stop-motion embroidery: chunky twisted yarn cords stitch themselves through the burlap holes one by one from top to bottom; red herringbone stitches fill the hoist band while white, red and green parallel cords fill the three bands, and the white khanjar emblem appears last. Slow continuous push-in (about 8%), cords tighten with small fibre wobbles, holes darken where the yarn enters the fabric. Macro lens, warm light, 24 fps, no cuts.
 ```
 - Camera: Kling: Camera Movement → Zoom (+3) · Runway: Zoom In 2, Horizontal 0
 - Render: Render 5 s → retime to 6.0 s (≈83% speed) · place at F0
 
 ### Bridge morph → Scene 2 (1.5 s)
 ```
-Start frame: S1 END. End frame: S2 START. The camera pushes through the woven band; the crimson threads peel off the burlap and rise vertically toward the top of frame, unspooling into flowing red yarn ridges while the background warms to golden-hour amber. One continuous Z-axis push-through, 1.5 s, no cut.
+Start frame: S1 END. End frame: S2 START. The camera dives to a low macro angle across the embroidery; the thick red cords unstitch and rise toward the lens like a wave while the white and green cords fall into soft bokeh behind them, and the background warms to golden-hour amber. 1.5–2 s, one continuous move, no cut.
 ```
 
 ---
@@ -62,7 +62,7 @@ On-screen text: Title الأحمر (in 00:06.9) · Subtitle أصالةٌ وعز�
 
 ### Midjourney v6 — START keyframe
 ```
-Crimson red wool threads rising up from a burlap textile and sculpting themselves into rolling sand dunes, the Wahiba Sands (Sharqiya Sands) of Oman made entirely of knitted crimson (#DB161B, #9E1115) and desert-sand (#D9C7B2) yarn, parallel yarn strands following every dune ridge, warm golden-hour sky in amber and crimson, low sun near the horizon on the left, glowing backlit fibers, handcrafted textile diorama, macro tilt-shift, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716
+Extreme low-angle macro of thick twisted crimson red (#DB161B) wool yarn cords rising from coarse burlap like a wave toward the camera, shallow depth of field with white and emerald green yarn cords softly blurred in bokeh behind, the red cords flowing into rolling sand-dune ridges of the Wahiba Sands knitted from crimson and desert-sand yarn, warm golden-hour light, glowing fibres, handcrafted textile art, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716
 ```
 
 ### Midjourney v6 — END keyframe

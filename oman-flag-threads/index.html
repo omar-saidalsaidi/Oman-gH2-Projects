@@ -156,8 +156,14 @@ button{font:inherit;color:inherit}
 .btn svg{width:18px;height:18px;fill:#fff}
 .btn.pill{width:auto;border-radius:999px;padding:0 14px;display:flex;gap:7px;font-size:13px;font-weight:700;white-space:nowrap}
 #time{font:12px/1 ui-monospace,Menlo,Consolas,monospace;direction:ltr;opacity:.85;min-width:84px;text-align:center}
-#sceneName{direction:rtl;font-size:12px;opacity:.75;flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sceneName{direction:rtl;min-width:0;font-size:12px;opacity:.75;flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+#stage.n1 #time{display:none}
+#stage.n2 .btn.pill .lbl{display:none}
+#stage.n2 .btn.pill{width:40px;padding:0;justify-content:center}
+#rec.recording{background:var(--red);border-color:#ff8a8d;animation:recPulse 1.2s ease-in-out infinite}
+@keyframes recPulse{50%{box-shadow:0 0 0 6px rgba(219,22,27,.25)}}
+@media (prefers-reduced-motion:reduce){#rec.recording{animation:none}}
 
 /* ───────── Prompts drawer ───────── */
 #scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;visibility:hidden;transition:.35s;z-index:20}
@@ -274,7 +280,10 @@ button:focus-visible{outline:2px solid #fff;outline-offset:2px}
       <span id="sceneName">البداية والنسيج</span>
       <button class="btn" id="mute" aria-label="كتم الصوت"><svg viewBox="0 0 24 24" id="muteIcon"></svg></button>
       <button class="btn pill" id="openPrompts" aria-label="عرض وتصدير برومبتات الفيديو">
-        <svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>برومبتات الفيديو
+        <svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg><span class="lbl">برومبتات الفيديو</span>
+      </button>
+      <button class="btn pill" id="rec" aria-label="حفظ الفيديو / Download Video" title="حفظ الفيديو / Download Video">
+        <svg viewBox="0 0 24 24"><path d="M12 3v11m0 0-4.5-4.5M12 14l4.5-4.5M5 19h14" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="lbl" id="recLbl">حفظ الفيديو</span>
       </button>
     </div>
   </div>
@@ -338,19 +347,19 @@ const PROMPT_PIPELINE = {
     {
       id: 1, ar: "البداية والنسيج", en: "The Loom & Foundation",
       time: "00:00–00:06", frames: "F0–F179 @30fps", color: "#C4AE94",
-      text: "ثلاثة ألوان... تروي قصة مجد  (in 00:00.5, out 00:05.7)",
-      mjStart: "Extreme macro photograph of coarse natural burlap hessian fabric filling the entire vertical frame, warm sand-beige jute basket weave (#D9C7B2, #C4AE94) with fuzzy fibers, three loose skeins of thick crimson red (#DB161B) wool, emerald green (#008000) wool and lustrous pure white silk thread entering from the right edge, frayed thread ends, soft warm raking side light, floating dust motes, shallow depth of field, tactile handcrafted textile art, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716",
-      mjEnd: "Extreme macro photograph of a tight woven band of pure white, crimson red (#DB161B) and emerald green (#008000) wool and silk threads interlaced over and under the natural burlap warp, three stacked horizontal color bands like a handwoven loom sample, the red strands in the middle gently lifting upward as if alive, glowing golden rim light along the fibers, loose floating fibers, shallow depth of field, handcrafted Omani textile art, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716",
-      motion: "Start frame: S1 START. End frame: S1 END. One continuous slow dolly push-in on the Z axis (about 8% over the shot), no cuts. Crimson, white and emerald threads glide in from right to left and weave over-and-under the burlap warp in a steady rhythmic loom motion, each strand dipping beneath the jute ribs; individual fibers quiver; dust motes drift through warm side light; in the final second the red strands lift slightly upward. Macro lens, shallow depth of field, organic, tactile, cinematic, 24 fps.",
+      text: "ثلاثة ألوان... تروي قصة مجد  (in 00:00.5, out 00:05.7) · macro dive + red cords lift from 00:04.4",
+      mjStart: "Overhead macro photograph of coarse natural burlap hessian with a high-relief basket weave and visible stitch holes, warm beige jute (#D9C7B2, #C4AE94), a silver embroidery needle threaded with a chunky twisted crimson red (#DB161B) yarn cord beginning the first diagonal stitch, coils of thick twisted pure white and emerald green (#008000) cords waiting at the edge, soft warm side light, fuzzy wool fibres, shallow depth of field, tactile handcrafted textile art, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716",
+      mjEnd: "Overhead macro photograph of the flag of the Sultanate of Oman hand-embroidered into coarse natural burlap with chunky twisted multi-ply yarn cords, set at a slight organic angle: a vertical crimson red (#DB161B) hoist band (one third of the length) stitched in thick diagonal herringbone satin stitches with the white khanjar and crossed-swords emblem embroidered in its upper part, and three equal horizontal bands of thick parallel twisted cords to the right: pure white on top, crimson red in the middle, emerald green (#008000) at the bottom, cords entering and exiting visible burlap stitch holes, fuzzy wool micro-fibres, deep soft shadows, warm natural light, only red, white and green yarn, no black, tactile handcrafted textile art, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716",
+      motion: "Start frame: S1 START. End frame: S1 END. Stop-motion embroidery: chunky twisted yarn cords stitch themselves through the burlap holes one by one from top to bottom; red herringbone stitches fill the hoist band while white, red and green parallel cords fill the three bands, and the white khanjar emblem appears last. Slow continuous push-in (about 8%), cords tighten with small fibre wobbles, holes darken where the yarn enters the fabric. Macro lens, warm light, 24 fps, no cuts.",
       camera: "Kling: Camera Movement → Zoom (+3) · Runway: Zoom In 2, Horizontal 0",
       render: "Render 5 s → retime to 6.0 s (≈83% speed) · place at F0",
-      bridge: "Start frame: S1 END. End frame: S2 START. The camera pushes through the woven band; the crimson threads peel off the burlap and rise vertically toward the top of frame, unspooling into flowing red yarn ridges while the background warms to golden-hour amber. One continuous Z-axis push-through, 1.5 s, no cut."
+      bridge: "Start frame: S1 END. End frame: S2 START. The camera dives to a low macro angle across the embroidery; the thick red cords unstitch and rise toward the lens like a wave while the white and green cords fall into soft bokeh behind them, and the background warms to golden-hour amber. 1.5–2 s, one continuous move, no cut."
     },
     {
       id: 2, ar: "الأحمر — الأصالة والعزم", en: "Crimson Red — Heritage & Strength",
       time: "00:06–00:13", frames: "F180–F389 @30fps", color: "#DB161B",
       text: "Title الأحمر (in 00:06.9) · Subtitle أصالةٌ وعزمٌ لا يلين (in 00:07.6) · out 00:12.7",
-      mjStart: "Crimson red wool threads rising up from a burlap textile and sculpting themselves into rolling sand dunes, the Wahiba Sands (Sharqiya Sands) of Oman made entirely of knitted crimson (#DB161B, #9E1115) and desert-sand (#D9C7B2) yarn, parallel yarn strands following every dune ridge, warm golden-hour sky in amber and crimson, low sun near the horizon on the left, glowing backlit fibers, handcrafted textile diorama, macro tilt-shift, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716",
+      mjStart: "Extreme low-angle macro of thick twisted crimson red (#DB161B) wool yarn cords rising from coarse burlap like a wave toward the camera, shallow depth of field with white and emerald green yarn cords softly blurred in bokeh behind, the red cords flowing into rolling sand-dune ridges of the Wahiba Sands knitted from crimson and desert-sand yarn, warm golden-hour light, glowing fibres, handcrafted textile art, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716",
       mjEnd: "The monumental round cylindrical tower of Nizwa Fort, Oman, crafted entirely from tightly wrapped rows of sand-colored and crimson wool yarn, crenellated parapet ring, small arched window slits, an adjoining crenellated wall, standing behind layered knitted crimson and sand yarn dunes of Wahiba Sands, warm golden-hour sunlight from the left, long soft shadows, glowing fuzzy fibers, handcrafted 3D woven sculpture, centered composition with calm empty dunes in the lower third, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716",
       motion: "Start frame: S2 START. End frame: S2 END. Continuous slow push-in with a gentle upward crane. Red yarn threads rise from the bottom of frame and coil into dune ridges that swell like breathing fabric, layer after layer from back to front; the round Nizwa Fort tower knits itself upward row by row from its base with a glowing stitching line travelling up the tower; sand-colored fibers drift in a light desert wind; warm golden light flickers through loose fibers. Textile stop-motion feel, smooth, cinematic, 24 fps.",
       camera: "Kling: Zoom (+2) + Tilt (+2) · Runway: Zoom In 2, Tilt Up 1",
@@ -467,6 +476,17 @@ function drawYarn(x, pts, col, lw, sh = 1, alpha = 1, vert = false) {
   x.setLineDash([lw * .55, lw * .6]);
   strokePts(x, pts, 'rgba(255,255,255,.9)', Math.max(1, lw * .08), ox * lw * .3, oy * lw * .3);
   x.setLineDash([]);
+  if (lw >= 8) {     // fuzzy wool micro-fibres along both edges
+    x.lineWidth = .8; x.strokeStyle = S.l; x.globalAlpha = alpha * .5; x.beginPath();
+    for (let i = 0; i < pts.length - 2; i += 2) {
+      const ax = pts[i], ay = pts[i + 1], bx = pts[i + 2], by = pts[i + 3], L = Math.hypot(bx - ax, by - ay) || 1, tx = (bx - ax) / L, ty = (by - ay) / L;
+      for (let f = 0; f < 3; f++) {
+        const hh = hash(i * 1.3 + f * 7.1 + ax * .013), sd = f % 2 ? 1 : -1, px = ax + (bx - ax) * hh, py = ay + (by - ay) * hh, e = lw * .48, o = 2 + hh * 5;
+        x.moveTo(px - ty * e * sd, py + tx * e * sd); x.lineTo(px - ty * (e + o) * sd + tx * 3, py + tx * (e + o) * sd + ty * 3);
+      }
+    }
+    x.stroke();
+  }
   x.restore();
 }
 
@@ -481,113 +501,205 @@ const put = (ctx, a, x = 0, y = 0) => ctx.drawImage(a.c, x, y, a.w, a.h);
 const A = {};   // pre-rendered assets
 
 /* =========================================================================
-   SCENE 1 — THE LOOM & FOUNDATION (burlap + weaving threads)
+   SCENE 1 — THE LOOM & FOUNDATION
+   The Omani flag is hand-embroidered into coarse burlap with chunky twisted
+   multi-ply yarn cords, stitched through the fabric one cord at a time:
+   red herringbone satin stitches in the hoist band, the white khanjar emblem,
+   and parallel white / red / green cords for the three bands. From 00:04.4 the
+   camera dives to a macro angle, the red cords unstitch and rise like a wave,
+   and the white/green embroidery falls into depth-of-field blur.
    ========================================================================= */
-const CS = 22;  // burlap cell size
+const CS = 30;  // burlap cell size
 const TONES = ['#D9C7B2', '#C4AE94', '#cfba9f', '#b8a083', '#e0cfba', '#c9b193'];
 function buildBurlap() {
   const a = mk(W, H), x = a.x, r = rng(11);
-  x.fillStyle = '#4f3f30'; x.fillRect(0, 0, W, H);
-  const cols = Math.ceil(W / CS) + 1, rows = Math.ceil(H / CS) + 1;
-  for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
-    const px = i * CS, py = j * CS, warpOver = (i + j) & 1, jx = (r() - .5) * 2.4, jy = (r() - .5) * 2.4;
-    x.fillStyle = TONES[(r() * TONES.length) | 0];
-    if (!warpOver) {           // weft (horizontal) on top
-      rr(x, px - 2 + jx, py + 4 + jy, CS + 4, CS - 8, 6); x.fill();
-      x.fillStyle = 'rgba(255,245,225,.22)'; x.fillRect(px + jx, py + 5 + jy, CS, 2.2);
-      x.fillStyle = 'rgba(55,38,22,.30)'; x.fillRect(px + jx, py + CS - 7 + jy, CS, 2.6);
-      x.strokeStyle = 'rgba(110,85,60,.28)'; x.lineWidth = .7; x.beginPath();
-      for (let k = 0; k < 3; k++) { const yy = py + 8 + k * 3 + jy; x.moveTo(px + jx, yy); x.lineTo(px + CS + jx, yy + (r() - .5) * 1.6); }
-      x.stroke();
-    } else {                   // warp (vertical) on top
-      rr(x, px + 4 + jx, py - 2 + jy, CS - 8, CS + 4, 6); x.fill();
-      x.fillStyle = 'rgba(255,245,225,.20)'; x.fillRect(px + 5 + jx, py + jy, 2.2, CS);
-      x.fillStyle = 'rgba(55,38,22,.30)'; x.fillRect(px + CS - 7 + jx, py + jy, 2.6, CS);
-      x.strokeStyle = 'rgba(110,85,60,.28)'; x.lineWidth = .7; x.beginPath();
-      for (let k = 0; k < 3; k++) { const xx = px + 8 + k * 3 + jx; x.moveTo(xx, py + jy); x.lineTo(xx + (r() - .5) * 1.6, py + CS + jy); }
-      x.stroke();
+  x.fillStyle = '#3a2c1f'; x.fillRect(0, 0, W, H);                    // deep stitch holes between threads
+  const cols = Math.ceil(W / CS) + 1, rows = Math.ceil(H / CS) + 1, cells = [];
+  for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) cells.push([i, j, (i + j) & 1, (r() - .5) * 2.6, (r() - .5) * 2.6, TONES[(r() * TONES.length) | 0]]);
+  const pill = (i, j, warp, jx, jy, d = 0) => { const px = i * CS + jx + d, py = j * CS + jy + d * 1.6;
+    warp ? rr(x, px + 5, py - 3, CS - 10, CS + 6, 10) : rr(x, px - 3, py + 5, CS + 6, CS - 10, 10); };
+  for (const [i, j, w, jx, jy] of cells) { x.fillStyle = 'rgba(0,0,0,.4)'; pill(i, j, w, jx, jy, 2); x.fill(); }   // ambient occlusion
+  for (const [i, j, w, jx, jy, tone] of cells) {
+    const px = i * CS + jx, py = j * CS + jy, g = w ? x.createLinearGradient(px + 5, 0, px + CS - 5, 0) : x.createLinearGradient(0, py + 5, 0, py + CS - 5);
+    g.addColorStop(0, hexMix(tone, '#3a2a1a', .55)); g.addColorStop(.32, hexMix(tone, '#ffffff', .22)); g.addColorStop(.55, tone); g.addColorStop(1, hexMix(tone, '#2a1a0e', .6));
+    x.fillStyle = g; pill(i, j, w, jx, jy); x.fill();
+    x.strokeStyle = 'rgba(70,50,30,.32)'; x.lineWidth = 1.1; x.beginPath();         // plied twist of each burlap thread
+    for (let k = 0; k < 5; k++) {
+      if (w) { const yy = py + k * 6.5; x.moveTo(px + 6, yy); x.lineTo(px + CS - 6, yy + 5); }
+      else { const xx = px + k * 6.5; x.moveTo(xx, py + 6); x.lineTo(xx + 5, py + CS - 6); }
     }
+    x.stroke();
   }
   x.lineWidth = .6;
-  for (let k = 0; k < 3500; k++) {
-    const px = r() * W, py = r() * H, l = 6 + r() * 20, an = r() * TAU;
-    x.strokeStyle = `rgba(${230 + r() * 25 | 0},${210 + r() * 25 | 0},${180 + r() * 30 | 0},${.12 + r() * .25})`;
-    x.beginPath(); x.moveTo(px, py);
-    x.quadraticCurveTo(px + Math.cos(an) * l * .5 + (r() - .5) * 6, py + Math.sin(an) * l * .5 + (r() - .5) * 6, px + Math.cos(an) * l, py + Math.sin(an) * l); x.stroke();
+  for (let k = 0; k < 5200; k++) {
+    const px = r() * W, py = r() * H, l = 5 + r() * 18, an = r() * TAU;
+    x.strokeStyle = `rgba(${232 + r() * 23 | 0},${214 + r() * 25 | 0},${184 + r() * 30 | 0},${.1 + r() * .25})`;
+    x.beginPath(); x.moveTo(px, py); x.quadraticCurveTo(px + Math.cos(an) * l * .5 + (r() - .5) * 6, py + Math.sin(an) * l * .5 + (r() - .5) * 6, px + Math.cos(an) * l, py + Math.sin(an) * l); x.stroke();
   }
-  for (let k = 0; k < 120; k++) {
-    const px = r() * W, py = r() * H, rad = 60 + r() * 240, d = r() < .55;
-    const gr = x.createRadialGradient(px, py, 0, px, py, rad);
+  for (let k = 0; k < 110; k++) {
+    const px = r() * W, py = r() * H, rad = 80 + r() * 260, d = r() < .55, gr = x.createRadialGradient(px, py, 0, px, py, rad);
     gr.addColorStop(0, d ? 'rgba(40,25,10,.12)' : 'rgba(255,240,215,.08)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
     x.fillStyle = gr; x.fillRect(px - rad, py - rad, rad * 2, rad * 2);
   }
   return a;
 }
 function buildLight1() {
-  const a = mk(W, H), x = a.x;
-  const g1 = x.createRadialGradient(560, 880, 40, 560, 900, 1150);
-  g1.addColorStop(0, 'rgba(255,214,160,.20)'); g1.addColorStop(.45, 'rgba(255,200,140,.04)'); g1.addColorStop(1, 'rgba(10,6,3,.55)');
-  x.fillStyle = g1; x.fillRect(0, 0, W, H);
+  const a = mk(W, H), x = a.x, g1 = x.createRadialGradient(520, 900, 40, 540, 920, 1150);
+  g1.addColorStop(0, 'rgba(255,226,180,.2)'); g1.addColorStop(.5, 'rgba(255,210,150,.05)'); g1.addColorStop(1, 'rgba(10,6,3,.38)');
+  x.fillStyle = g1; x.fillRect(0, 0, W, H); return a;
+}
+/* Chunky 3-ply twisted cord, pre-rendered once per colour: cylindrical shading,
+   helical plies with their own highlight and groove shadow, fuzzy micro-fibres. */
+const CORD_L = 1100, CORD_T = 44, CORD_R = 15;
+function buildCord(col, seed) {
+  const a = mk(CORD_L, CORD_T), x = a.x, r = rng(seed), S = yarnShades(col), white = col === C.white, cy = CORD_T / 2, R = CORD_R;
+  const deep = white ? '#8a8072' : hexMix(col, '#0a0300', .7);
+  x.save(); x.beginPath(); x.rect(0, cy - R, CORD_L, 2 * R); x.clip();
+  let g = x.createLinearGradient(0, cy - R, 0, cy + R); g.addColorStop(0, deep); g.addColorStop(.5, S.d); g.addColorStop(1, deep);
+  x.fillStyle = g; x.fillRect(0, cy - R, CORD_L, 2 * R);
+  x.lineCap = 'round'; const P = 13;
+  for (let x0 = -40; x0 < CORD_L + 40; x0 += P) {
+    const j = (r() - .5) * 1.6, ply = () => { x.beginPath(); x.moveTo(x0 + j, cy - R - 3); x.bezierCurveTo(x0 + 6, cy - R * .4, x0 + 11, cy + R * .4, x0 + 18 + j, cy + R + 3); };
+    ply(); x.strokeStyle = S.m; x.lineWidth = P * .98; x.stroke();
+    x.strokeStyle = col; x.lineWidth = P * .6; x.stroke();
+    x.save(); x.translate(-2.4, -1); ply(); x.strokeStyle = rgba(S.l, white ? .9 : .7); x.lineWidth = P * .2; x.stroke(); x.restore();
+    x.save(); x.translate(P * .5, 0); ply(); x.strokeStyle = white ? 'rgba(90,75,60,.35)' : 'rgba(0,0,0,.4)'; x.lineWidth = 1.7; x.stroke(); x.restore();
+    x.save(); x.translate(1.5, .5); ply(); x.strokeStyle = 'rgba(255,255,255,.1)'; x.lineWidth = .7; x.stroke(); x.restore();
+  }
+  g = x.createLinearGradient(0, cy - R, 0, cy + R);
+  g.addColorStop(0, 'rgba(0,0,0,.6)'); g.addColorStop(.2, 'rgba(0,0,0,.06)'); g.addColorStop(.34, 'rgba(255,255,255,.2)');
+  g.addColorStop(.5, 'rgba(0,0,0,0)'); g.addColorStop(.78, 'rgba(0,0,0,.2)'); g.addColorStop(1, 'rgba(0,0,0,.7)');
+  x.fillStyle = g; x.fillRect(0, cy - R, CORD_L, 2 * R);
+  x.restore();
+  x.lineWidth = .7;
+  for (let k = 0; k < 1500; k++) {
+    const px = r() * CORD_L, top = r() < .5, sd = top ? -1 : 1, py = cy + sd * (R - r() * 3), len = 2 + r() * 6;
+    x.strokeStyle = rgba(top ? S.l : S.m, .25 + r() * .35); x.beginPath(); x.moveTo(px, py);
+    x.quadraticCurveTo(px + len * .5, py + sd * len * .6, px + len * (r() - .3), py + sd * len); x.stroke();
+  }
+  for (let k = 0; k < 600; k++) { const px = r() * CORD_L, py = cy + (r() - .5) * R * 1.6; x.strokeStyle = rgba(S.l, .12 + r() * .14); x.beginPath(); x.moveTo(px, py); x.lineTo(px + 2 + r() * 5, py + (r() - .5) * 3); x.stroke(); }
   return a;
 }
-const S1 = { strands: [], fibers: [] };
+function buildHole() {
+  const a = mk(40, 40), x = a.x, g = x.createRadialGradient(20, 20, 0, 20, 20, 20);
+  g.addColorStop(0, 'rgba(18,9,3,.85)'); g.addColorStop(.5, 'rgba(18,9,3,.5)'); g.addColorStop(1, 'rgba(18,9,3,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 40, 40); return a;
+}
+function buildEndAO() {
+  const a = mk(28, 48), x = a.x, g = x.createLinearGradient(0, 0, 28, 0);
+  g.addColorStop(0, 'rgba(12,6,0,.75)'); g.addColorStop(1, 'rgba(12,6,0,0)'); x.fillStyle = g; x.fillRect(0, 0, 28, 48); return a;
+}
+const PATCH = { cx: 540, cy: 950, rot: -.07, w: 840, h: 480 };
+const CORDS = [];
+let EMB_PATH = null;
+function clipSeg(ax, ay, bx, by, x0, y0, x1, y1) {           // Liang–Barsky
+  let t0 = 0, t1 = 1; const dx = bx - ax, dy = by - ay;
+  for (const [pp, q] of [[-dx, ax - x0], [dx, x1 - ax], [-dy, ay - y0], [dy, y1 - ay]]) {
+    if (pp === 0) { if (q < 0) return null; continue; }
+    const t = q / pp; if (pp < 0) { if (t > t1) return null; if (t > t0) t0 = t; } else { if (t < t0) return null; if (t < t1) t1 = t; }
+  }
+  return [ax + dx * t0, ay + dy * t0, ax + dx * t1, ay + dy * t1];
+}
+const S1 = { fibers: [] };
 function initS1() {
-  const r = rng(21);
-  // three bold bands in pure flag colours: white, red, green (5 braided yarns each)
-  [{ y: 690, col: C.white }, { y: 880, col: C.red }, { y: 1070, col: C.green }].forEach((d, g) => {
-    for (let k = 0; k < 5; k++) S1.strands.push({ g, k, y: d.y + k * 32, col: d.col, delay: g * .5 + k * .12 + r() * .06, seed: r() * 100, lw: 25 + r() * 3 });
-  });
-  for (let i = 0; i < 34; i++) S1.fibers.push({ x: r() * W, y: r() * H, len: 30 + r() * 70, sp: .4 + r() * 1.2, ph: r() * TAU, col: [C.red, '#ffffff', C.green, '#D9C7B2'][i % 4] });
-}
-function s1Lift(s, lt) { return s.g === 1 ? Math.pow(Math.max(0, lt - 4.4), 2) * 60 : Math.pow(Math.max(0, lt - 4.9), 2) * 26; }
-const s1Under = (s, col) => ((col + s.k * 2 + s.g) & 3) === 0;      // float weave: yarn passes under 1 warp rib in 4
-function s1Y(s, X, lt, lift) {
-  const under = s1Under(s, Math.floor(X / CS));
-  return s.y + Math.sin(X * .016 - lt * 1.6 + s.k * .7) * 2.4 + noise(X * .006 + s.seed) * 4 + (under ? 2.2 : -1.2) - lift * Math.sin(Math.PI * clamp(X / W));
-}
-function drawS1(x, lt) {
-  put(x, A.burlap);
-  // deepen the burlap behind the weave so the flag colours read boldly
-  const k = sstep(.1, 1.4, lt), bg = x.createLinearGradient(0, 560, 0, 1300);
-  bg.addColorStop(0, 'rgba(22,12,5,0)'); bg.addColorStop(.18, `rgba(22,12,5,${.42 * k})`); bg.addColorStop(.82, `rgba(22,12,5,${.42 * k})`); bg.addColorStop(1, 'rgba(22,12,5,0)');
-  x.fillStyle = bg; x.fillRect(0, 560, W, 740);
-  const heads = [];
-  for (const s of S1.strands) {
-    const p = eIO((lt - .3 - s.delay) / 2.4);
-    heads.push(p);
-    if (p <= 0) continue;
-    const xh = lerp(W + 60, -60, p), lift = s1Lift(s, lt), pts = [];
-    for (let X = W + 60; X > xh; X -= 10) pts.push(X, s1Y(s, X, lt, lift));
-    pts.push(xh, s1Y(s, xh, lt, lift));
-    drawYarn(x, pts, s.col, s.lw, 1);
-    if (p < 1) {   // frayed leading end: splayed fibres of the same colour
-      const Y = s1Y(s, xh, lt, lift), S = yarnShades(s.col);
-      x.lineCap = 'round';
-      for (let f = 0; f < 9; f++) {
-        x.strokeStyle = f % 3 ? s.col : S.l; x.lineWidth = 2.4;
-        const a = (f - 4) * .13 + Math.sin(lt * 6 + f) * .05;
-        x.beginPath(); x.moveTo(xh + 4, Y + (f - 4) * 2.2); x.quadraticCurveTo(xh - 14, Y + (f - 4) * 3.2, xh - 26 - f % 3 * 6, Y + Math.sin(a) * 40); x.stroke();
-      }
+  const r = rng(21), FW = PATCH.w, FH = PATCH.h, raw = [];
+  const cw = FW / 6, m = 4, slope = .8;                      // hoist band = 1/3 of the length: two herringbone columns
+  for (let col = 0; col < 2; col++) {
+    const x0 = col ? cw - 12 : m, x1 = col ? 2 * cw + 2 : cw + 4, dy = (x1 - x0) * slope;   // columns meet in the chevron
+    for (let y = m; y < FH + dy; y += 20) {
+      const sg = col === 0 ? clipSeg(x0, y, x1, y - dy, x0, m, x1, FH - m) : clipSeg(x0, y - dy, x1, y, x0, m, x1, FH - m);
+      if (sg && Math.hypot(sg[2] - sg[0], sg[3] - sg[1]) > 26) raw.push({ col: C.red, red: true, a: [sg[0], sg[1]], b: [sg[2], sg[3]], lw: 26, inA: Math.abs(sg[0] - cw) < 16, inB: Math.abs(sg[2] - cw) < 16 });
     }
   }
-  // warp ribs passing OVER the yarn (over/under float weave)
-  S1.strands.forEach((s, idx) => {
-    const p = heads[idx]; if (p <= 0) return;
-    const xh = lerp(W + 60, -60, p), lift = s1Lift(s, lt), hh = s.lw + 12;
-    for (let col = Math.floor(xh / CS); col * CS < W + 22; col++) {
-      if (!s1Under(s, col)) continue;
-      const X0 = col * CS; if (X0 + CS * .5 < xh) continue;
-      const Y = s1Y(s, X0 + CS / 2, lt, lift);
-      x.fillStyle = 'rgba(15,8,3,.45)'; rr(x, X0 + 1, Y - hh / 2 + 3, CS - 2, hh + 2, 6); x.fill();
-      x.fillStyle = TONES[(hash(col * 3.7) * TONES.length) | 0]; rr(x, X0 + 4, Y - hh / 2, CS - 8, hh, 6); x.fill();
-      x.fillStyle = 'rgba(255,245,225,.3)'; x.fillRect(X0 + 5, Y - hh / 2 + 2, 2.2, hh - 4);
-      x.fillStyle = 'rgba(55,38,22,.35)'; x.fillRect(X0 + CS - 7, Y - hh / 2 + 2, 2.6, hh - 4);
-    }
+  [C.white, C.red, C.green].forEach((col, b) => {            // three equal bands, 7 parallel cords each
+    for (let k = 0; k < 7; k++) { const y = b * FH / 3 + 11.4 + k * 22.9 + (r() - .5) * 1.5; raw.push({ col, red: col === C.red, a: [FW / 3 + 2 + r() * 3, y], b: [FW - 6 - r() * 6, y + (r() - .5) * 3], lw: 24 }); }
   });
+  const ca = Math.cos(PATCH.rot), sa = Math.sin(PATCH.rot), toScene = ([u, v]) => { const dx = u - FW / 2, dy = v - FH / 2; return [PATCH.cx + dx * ca - dy * sa, PATCH.cy + dx * sa + dy * ca]; };
+  raw.sort((p, q) => (p.a[1] + p.b[1]) - (q.a[1] + q.b[1]));            // stitched top → bottom
+  const stagger = 3.3 / raw.length;
+  raw.forEach((c, i) => {
+    [c.ax, c.ay] = toScene(c.a); [c.bx, c.by] = toScene(c.b);
+    c.len = Math.hypot(c.bx - c.ax, c.by - c.ay); c.an = Math.atan2(c.by - c.ay, c.bx - c.ax);
+    c.t0 = .3 + i * stagger; c.dur = .5; c.h = hash(i * 3.7);
+    c.spr = A.cordSpr[c.col][hash(i * 1.9) < .5 ? 0 : 1]; c.sx = hash(i * 5.3) * Math.max(0, CORD_L - c.len / (c.lw / (2 * CORD_R)) - 2);
+  });
+  CORDS.push(...raw);
+  const el = document.getElementById('omanFlagSvg'), mm = el && /fill-rule="evenodd" d="([^"]+)"/.exec(el.textContent);
+  EMB_PATH = mm ? new Path2D(mm[1]) : null;
+  for (let i = 0; i < 34; i++) S1.fibers.push({ x: r() * W, y: r() * H, len: 30 + r() * 70, sp: .4 + r() * 1.2, ph: r() * TAU, col: [C.red, '#ffffff', C.green, '#D9C7B2'][i % 4] });
+}
+function drawCord(x, c, p) {
+  if (p <= 0) return;
+  const lw = c.lw, s = lw / (2 * CORD_R), L = c.len * p, ex = c.ax + Math.cos(c.an) * L, ey = c.ay + Math.sin(c.an) * L;
+  if (!c.inA) x.drawImage(A.hole.c, c.ax - lw * .75, c.ay - lw * .75, lw * 1.5, lw * 1.5);           // no holes along the herringbone centre line
+  if (p >= 1 && !c.inB) x.drawImage(A.hole.c, c.bx - lw * .75, c.by - lw * .75, lw * 1.5, lw * 1.5);
+  x.lineCap = 'round';
+  x.strokeStyle = 'rgba(15,8,2,.2)'; x.lineWidth = lw * 1.5; x.beginPath(); x.moveTo(c.ax + 7, c.ay + 13); x.lineTo(ex + 7, ey + 13); x.stroke();
+  x.strokeStyle = 'rgba(15,8,2,.42)'; x.lineWidth = lw * 1.05; x.beginPath(); x.moveTo(c.ax + 3, c.ay + 7); x.lineTo(ex + 3, ey + 7); x.stroke();
+  x.save(); x.translate(c.ax, c.ay); x.rotate(c.an);
+  rr(x, 0, -lw / 2 - 3, L, lw + 6, lw / 2 + 3); x.clip();
+  x.drawImage(c.spr.c, c.sx * Q, 0, (L / s) * Q, c.spr.c.height, 0, -CORD_T / 2 * s, L, CORD_T * s);
+  if (!c.inA) x.drawImage(A.endAO.c, -lw * .1, -lw * .6, lw * .75, lw * 1.2);       // yarn entering the fabric
+  if (p >= 1 && !c.inB) { x.translate(L, 0); x.scale(-1, 1); x.drawImage(A.endAO.c, -lw * .1, -lw * .6, lw * .75, lw * 1.2); }
+  x.restore();
+}
+function drawNeedle(x, c, p) {
+  const L = c.len * p, tx = c.ax + Math.cos(c.an) * L, ty = c.ay + Math.sin(c.an) * L;
+  x.save(); x.translate(tx, ty); x.rotate(c.an - .12); x.lineCap = 'round';
+  x.strokeStyle = 'rgba(15,8,2,.35)'; x.lineWidth = 4; x.beginPath(); x.moveTo(2, 8); x.lineTo(58, 6); x.stroke();
+  const g = x.createLinearGradient(0, -3, 0, 3); g.addColorStop(0, '#ffffff'); g.addColorStop(.5, '#c9ccd2'); g.addColorStop(1, '#6d7178');
+  x.strokeStyle = g; x.lineWidth = 3.6; x.beginPath(); x.moveTo(-6, 0); x.lineTo(56, -2); x.stroke();
+  x.strokeStyle = '#2a2a2e'; x.lineWidth = 1; x.beginPath(); x.ellipse(2, 0, 4, 1.1, 0, 0, TAU); x.stroke();
+  x.restore();
+}
+function drawEmblemEmb(x, k) {     // official emblem path, embroidered in raised white over the hoist band
+  if (!EMB_PATH || k <= 0) return;
+  const sc = PATCH.w / 1600, z = 1 + (1 - k) * .1;
+  x.save(); x.globalAlpha *= k; x.translate(PATCH.cx, PATCH.cy); x.rotate(PATCH.rot); x.translate(-PATCH.w / 2, -PATCH.h / 2); x.scale(sc, sc);
+  x.translate(269, 176); x.scale(z, z); x.translate(-269, -176);
+  x.save(); x.translate(3, 7); x.fillStyle = 'rgba(40,0,0,.6)'; x.fill(EMB_PATH, 'evenodd'); x.restore();
+  x.fillStyle = '#fff'; x.fill(EMB_PATH, 'evenodd'); x.lineWidth = 1.5; x.strokeStyle = '#fff'; x.stroke(EMB_PATH);
+  x.restore();
+}
+const S1C = { n: -1 };
+function s1CacheTo(n) {               // burlap + every completed cord, baked incrementally (cords finish in order)
+  if (n === S1C.n) return;
+  const cx = A.s1cache.x;
+  if (n < S1C.n || S1C.n < 0) { cx.setTransform(Q, 0, 0, Q, 0, 0); put(cx, A.burlap); S1C.n = 0; }
+  for (let i = S1C.n; i < n; i++) drawCord(cx, CORDS[i], 1);
+  S1C.n = n;
+}
+const LIFT0 = 4.4;
+const liftK = (c, lt) => c.red ? eIO((lt - LIFT0 - c.h * .6) / 1.4) : 0;
+function liftedPts(c, k, lt, i) {
+  const pts = [], up = 200 + 420 * c.h, extra = Math.max(0, lt - 5.6) * 260;
+  for (let s = 0; s <= 1.0001; s += 1 / 16) {
+    const px = lerp(c.ax, c.bx, s), py = lerp(c.ay, c.by, s), arch = .35 + .65 * Math.sin(Math.PI * s);
+    pts.push(px + (px - 470) * .12 * k + Math.sin(s * 5 + lt * 3 + i) * 10 * k, py - (k * up + extra) * arch + Math.sin(s * 6.3 - lt * 4.5 + i * .7) * 26 * k);
+  }
+  return pts;
+}
+function drawS1(x, lt) {
+  const zf = 1 + 1.25 * eIO((lt - 4.2) / 2.3);                                    // macro dive
+  if (zf > 1) { x.translate(470, 960); x.scale(zf, zf); x.translate(-470, -960); }
+  if (lt < LIFT0) {
+    let n = 0; while (n < CORDS.length && lt >= CORDS[n].t0 + CORDS[n].dur) n++;
+    s1CacheTo(n); put(x, A.s1cache);
+    for (let i = n; i < CORDS.length; i++) { const c = CORDS[i], p = eIO((lt - c.t0) / c.dur); if (p <= 0) break; drawCord(x, c, p); if (p < 1) drawNeedle(x, c, p); }
+    drawEmblemEmb(x, sstep(3.6, 4.3, lt));
+  } else {
+    const L = A.layer1, lx = L.x, blur = 16 * Q * eIO((lt - LIFT0) / 1.4);       // depth of field: background embroidery
+    lx.setTransform(1, 0, 0, 1, 0, 0); lx.clearRect(0, 0, L.c.width, L.c.height); lx.setTransform(x.getTransform());
+    put(lx, A.s1noRed);
+    for (const c of CORDS) if (c.red && liftK(c, lt) <= 0) drawCord(lx, c, 1);
+    drawEmblemEmb(lx, 1);
+    x.save(); x.setTransform(1, 0, 0, 1, 0, 0); if (blur > .3) x.filter = `blur(${blur.toFixed(1)}px)`; x.drawImage(L.c, 0, 0); x.filter = 'none'; x.restore();
+    CORDS.forEach((c, i) => { const k = liftK(c, lt); if (k > 0) drawYarn(x, liftedPts(c, k, lt, i), C.red, c.lw * 1.08, .8, 1); });
+  }
   x.lineWidth = 2;
   for (const f of S1.fibers) {
     const fx = mod(f.x - lt * f.sp * 26, W + 200) - 100, fy = f.y + Math.sin(lt * .6 + f.ph) * 24;
-    x.strokeStyle = rgba(f.col, .7); x.beginPath(); x.moveTo(fx, fy);
+    x.strokeStyle = rgba(f.col, .6); x.beginPath(); x.moveTo(fx, fy);
     x.bezierCurveTo(fx + f.len * .3, fy - 18 * Math.sin(lt + f.ph), fx + f.len * .7, fy + 18, fx + f.len, fy + Math.sin(f.ph) * 10); x.stroke();
   }
   put(x, A.light1);
@@ -597,11 +709,11 @@ function drawS1(x, lt) {
    SCENE 2 — CRIMSON RED: Wahiba dunes + Nizwa Fort in yarn
    ========================================================================= */
 const DUNES = [
-  { base: 1185, a: 105, f: .0042, p: .5, b: 22, f2: .011, p2: 1.0, fill: '#d9a77a', yarn: ['#e8c4a0', '#d6ab84', '#cf9f78'], al: .55, lw: 4, gap: 7, haze: .28 },
-  { base: 1270, a: 118, f: .0036, p: 2.1, b: 24, f2: .009, p2: 2.2, fill: '#c47a5a', yarn: ['#D9C7B2', '#c46a52', '#b8574a'], al: .6, lw: 4.5, gap: 8, haze: .14 },
-  { base: 1420, a: 128, f: .0031, p: 3.7, b: 26, f2: .008, p2: .4, fill: '#b0352a', yarn: ['#DB161B', '#D9C7B2', '#c42a22'], al: .7, lw: 5, gap: 8, haze: 0 },
-  { base: 1590, a: 148, f: .0028, p: .9, b: 30, f2: .007, p2: 1.7, fill: '#8f1013', yarn: ['#DB161B', '#9E1115', '#C4AE94'], al: .75, lw: 6, gap: 9, haze: 0 },
-  { base: 1790, a: 168, f: .0024, p: 4.4, b: 34, f2: .006, p2: 3.1, fill: '#5e0a0c', yarn: ['#9E1115', '#DB161B', '#b88f6e'], al: .8, lw: 7, gap: 10, haze: 0 }
+  { base: 1185, a: 105, f: .0042, p: .5, b: 22, f2: .011, p2: 1.0, fill: '#d9a77a', yarn: ['#e8c4a0', '#d6ab84', '#cf9f78'], al: .55, lw: 5, gap: 7, haze: .28 },
+  { base: 1270, a: 118, f: .0036, p: 2.1, b: 24, f2: .009, p2: 2.2, fill: '#c47a5a', yarn: ['#D9C7B2', '#c46a52', '#b8574a'], al: .6, lw: 6, gap: 9, haze: .14 },
+  { base: 1420, a: 128, f: .0031, p: 3.7, b: 26, f2: .008, p2: .4, fill: '#b0352a', yarn: ['#DB161B', '#D9C7B2', '#c42a22'], al: .7, lw: 8, gap: 11, haze: 0 },
+  { base: 1590, a: 148, f: .0028, p: .9, b: 30, f2: .007, p2: 1.7, fill: '#8f1013', yarn: ['#DB161B', '#9E1115', '#C4AE94'], al: .75, lw: 10, gap: 13, haze: 0 },
+  { base: 1790, a: 168, f: .0024, p: 4.4, b: 34, f2: .006, p2: 3.1, fill: '#5e0a0c', yarn: ['#9E1115', '#DB161B', '#b88f6e'], al: .8, lw: 12, gap: 15, haze: 0 }
 ];
 function duneY(i, x) { const P = DUNES[i]; return P.base - P.a * Math.pow(1 - Math.abs(Math.sin(x * P.f + P.p)), 1.6) - P.b * Math.sin(x * P.f2 + P.p2); }
 function buildSky2() {
@@ -632,13 +744,10 @@ function buildDune(i) {
   const g = x.createLinearGradient(0, top, 0, top + 700); g.addColorStop(0, P.fill); g.addColorStop(1, mix(P.fill, '#2a0505', .45));
   x.fillStyle = g; x.fillRect(-10, top, W + 20, hh);
   x.lineCap = 'round';
-  for (let d = -4, n = 0; d < hh; d += P.gap, n++) {
-    x.strokeStyle = rgba(P.yarn[n % P.yarn.length], P.al); x.lineWidth = P.lw; x.beginPath();
-    for (let X = -10; X <= W + 10; X += 12) {
-      const yy = duneY(i, X) + d * (1 + .12 * Math.sin(X * .004 + n * .1)) + noise(X * .02 + n, i) * 1.5;
-      X === -10 ? x.moveTo(X, yy) : x.lineTo(X, yy);
-    }
-    x.stroke();
+  for (let d = -4, n = 0; d < hh; d += P.gap, n++) {             // dunes knitted from twisted yarn rows
+    const pts = [];
+    for (let X = -10; X <= W + 10; X += 12) pts.push(X, duneY(i, X) + d * (1 + .12 * Math.sin(X * .004 + n * .1)) + noise(X * .02 + n, i) * 1.5);
+    drawYarn(x, pts, P.yarn[n % P.yarn.length], P.lw, .35, P.al);
   }
   for (let X = -10; X <= W + 10; X += 6) {     // sun from the left: shade by slope
     const s = (duneY(i, X + 3) - duneY(i, X - 3)) / 6, y0 = duneY(i, X);
@@ -683,8 +792,8 @@ function buildFort() {
     let col = ['#D9C7B2', '#C4AE94', '#cdb595', '#bfa27f'][(r() * 4) | 0];
     if (n % 22 === 5 || n % 22 === 6) col = (n % 44 < 22) ? '#DB161B' : '#9E1115';
     else if (r() < .07) col = '#b5423a';
-    x.strokeStyle = col; x.lineWidth = 6.5; x.beginPath(); x.moveTo(cx - rx - 5, y); x.quadraticCurveTo(cx, y + ry * 2, cx + rx + 5, y); x.stroke();
-    x.strokeStyle = 'rgba(255,240,215,.22)'; x.lineWidth = 1.4; x.beginPath(); x.moveTo(cx - rx, y - 2); x.quadraticCurveTo(cx, y + ry * 2 - 2, cx + rx, y - 2); x.stroke();
+    const pts = []; for (let q = 0; q <= 1.0001; q += 1 / 18) { const u = 1 - q; pts.push(u * u * (cx - rx - 5) + 2 * u * q * cx + q * q * (cx + rx + 5), u * u * y + 2 * u * q * (y + ry * 2) + q * q * y); }
+    drawYarn(x, pts, col, 7, .3);
   }
   for (const [wx, wy, ww, wh] of [[cx - 80, 300, 14, 36], [cx + 36, 280, 14, 36], [cx - 14, 450, 16, 40], [cx + 100, 500, 12, 32], [cx - 130, 540, 12, 32], [cx + 20, 640, 14, 34]]) {
     x.fillStyle = 'rgba(255,230,190,.35)'; rr(x, wx - 3, wy - 3, ww + 6, wh + 6, 8); x.fill();
@@ -733,7 +842,7 @@ function risingThreads(x, lt, cols, seed, n, t0, dur, toWhite) {
     const x0 = 80 + hash(i * 7.3 + seed) * 920, head = H + 80 - eOut(p) * 1500, tail = head + 380 + hash(i * 2.1 + seed) * 320;
     const al = Math.min(1, Math.sin(Math.PI * p) * 1.4), col = toWhite ? TO_WHITE[Math.min(4, p * 5 | 0)] : cols[i % cols.length], pts = [];
     for (let y = tail; y >= head; y -= 14) pts.push(x0 + Math.sin(y * .008 + lt * 2 + i) * 40, y);
-    drawYarn(x, pts, col, 12 + hash(i * 3.3) * 6, .55, al, true);
+    drawYarn(x, pts, col, 20 + hash(i * 3.3) * 10, .6, al, true);
   }
 }
 function drawS2(x, lt) {
@@ -760,7 +869,7 @@ function drawS2(x, lt) {
     const d = A.dunes[i], rise = (1 - eOut((lt - .2 - i * .18) / 1.8)) * 720 * (.6 + i * .1);
     if (rise < H) x.drawImage(d.c, 0, d.top + rise, W, d.h);
   }
-  risingThreads(x, lt, [C.red, C.red, C.redD, C.sand], 3, 22, -.7, 2.6, false);
+  risingThreads(x, lt, [C.red, C.red, C.redD, C.red], 3, 18, -.9, 2.8, false);
   x.fillStyle = 'rgba(255,225,180,.7)';                    // wind-blown sand fibers
   for (let k = 0; k < 70; k++) { const px = mod(hash(k) * W - lt * (60 + hash(k * 2) * 120), W), py = 900 + hash(k * 3) * 900 + Math.sin(lt + k) * 10; x.fillRect(px, py, 6 + hash(k * 5) * 10, 1.4); }
   x.save(); x.globalCompositeOperation = 'screen'; x.globalAlpha = .55 + .1 * Math.sin(lt * 1.3); put(x, A.glow2); x.restore();
@@ -915,7 +1024,7 @@ function drawS3(x, lt) {
   x.drawImage(A.ground3.c, 0, A.ground3.top + gr, W, A.ground3.h);
   x.save(); x.translate(0, gr); drawFalaj(x, lt); x.restore();
   for (const P of PALMS) drawPalm(x, P, lt);
-  risingThreads(x, lt, [C.green, C.green, C.greenD, '#1a9a2e'], 9, 20, -.7, 2.4, false);
+  risingThreads(x, lt, [C.green, C.green, C.greenD, '#1a9a2e'], 9, 15, -.7, 2.4, false);
   x.save(); x.globalCompositeOperation = 'screen'; x.globalAlpha = .5; put(x, A.glow3); x.restore();
 }
 
@@ -1079,7 +1188,7 @@ function drawS4(x, lt) {
   const ar = (1 - eOut((lt + .3) / 1.8)) * 160;
   x.drawImage(A.arch.c, 0, A.arch.top + ar, W, A.arch.h);
   drawMabkhara(x, SMOKE.sx, 1360 + ar, lt);
-  risingThreads(x, lt, [C.falaj], 41, 22, -.7, 2.6, true);
+  risingThreads(x, lt, [C.falaj], 41, 16, -.7, 2.6, true);
   drawSmoke(x, lt, sstep(.2, 1.4, lt));
   // smoke → dove convergence
   const P = pose4(lt), fade = 1 - sstep(3.6, 4.6, lt);
@@ -1335,8 +1444,10 @@ const AU = {
   init() {
     if (this.ctx) return; const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
     const c = this.ctx = new AC();
-    const out = this.out = c.createGain(); out.gain.value = this.muted ? 0 : .85;
-    const comp = c.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3; out.connect(comp); comp.connect(c.destination);
+    const out = this.out = c.createGain(); out.gain.value = .85;
+    const comp = c.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3; out.connect(comp);
+    const mon = this.mon = c.createGain(); mon.gain.value = this.muted ? 0 : 1; comp.connect(mon); mon.connect(c.destination);
+    if (c.createMediaStreamDestination) { this.recDest = c.createMediaStreamDestination(); comp.connect(this.recDest); }
     const rev = this.rev = c.createConvolver(); rev.buffer = this.impulse(3.4, 2.4); const rg = c.createGain(); rg.gain.value = .38; rev.connect(rg); rg.connect(out);
     const nb = this.nb = c.createBuffer(1, c.sampleRate * 3, c.sampleRate), nd = nb.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
     // pad
@@ -1394,7 +1505,7 @@ const AU = {
     const gg = c.createGain(); gg.gain.setValueAtTime(0, t0); gg.gain.linearRampToValueAtTime(.28, t0 + .8); gg.gain.exponentialRampToValueAtTime(.001, t0 + 1.6);
     s.connect(bp); bp.connect(gg); gg.connect(this.out); gg.connect(this.rev); s.start(t0, Math.random(), 1.7);
   },
-  setMuted(m) { this.muted = m; if (this.ctx) this.out.gain.setTargetAtTime(m ? 0 : .85, this.ctx.currentTime, .08); },
+  setMuted(m) { this.muted = m; if (this.ctx) this.mon.gain.setTargetAtTime(m ? 0 : 1, this.ctx.currentTime, .08); },
   pause() { if (this.ctx && this.ctx.state === 'running') this.ctx.suspend(); },
   resume() { if (this.ctx && this.ctx.state !== 'running') this.ctx.resume(); }
 };
@@ -1414,7 +1525,7 @@ function audioTick(a, b) { if (!AU.ctx) return; for (const e of EV) if (e.t > a 
    PLAYER
    ========================================================================= */
 let T = 0, prevT = -.001, playing = false, dirty = true, last = 0, ready = false, idleTimer = 0, started = false;
-const POSTER_T = 4.4;
+const POSTER_T = 4.3;
 const ICON_PLAY = '<path d="M7 4v16l13-8z"/>', ICON_PAUSE = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
 const ICON_VOL = '<path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/>';
 const ICON_MUTE = '<path d="M3 9v6h4l5 4V5L7 9H3zm13.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4z"/>';
@@ -1436,9 +1547,10 @@ function play() {
   started = true; playing = true; setPlayIcon(); $('#intro').classList.add('hide'); poke();
 }
 function pause() { playing = false; AU.pause(); setPlayIcon(); poke(); }
-function toggle() { playing ? pause() : play(); }
-function replay() { T = 0; prevT = -.001; dirty = true; playing = false; play(); }
-function seek(t) { started = true; $('#intro').classList.add('hide'); T = clamp(t, 0, DUR); prevT = T; dirty = true; if (AU.ctx) AU.scene(sceneIndex(T)); }
+const recBusy = () => { if (REC.on) { toast('جارٍ تسجيل الفيديو… اضغط «إيقاف» للإلغاء'); return true; } return false; };
+function toggle() { if (recBusy()) return; playing ? pause() : play(); }
+function replay() { if (recBusy()) return; T = 0; prevT = -.001; dirty = true; playing = false; play(); }
+function seek(t) { if (REC.on) return; started = true; $('#intro').classList.add('hide'); T = clamp(t, 0, DUR); prevT = T; dirty = true; if (AU.ctx) AU.scene(sceneIndex(T)); }
 function poke() { const ui = $('#ui'); ui.classList.remove('idle'); clearTimeout(idleTimer); if (playing) idleTimer = setTimeout(() => ui.classList.add('idle'), 2600); }
 function loop(now) {
   const dt = Math.min(.1, (now - last) / 1000 || 0); last = now;
@@ -1447,6 +1559,7 @@ function loop(now) {
     audioTick(prevT, T); prevT = T; dirty = true;
   }
   if (dirty && ready) { render(started ? T : POSTER_T); updateCaptions(started ? T : 0); updateUI(); dirty = false; }
+  if (REC.on) { recFrame(); if (T >= DUR && !REC.stopping) { REC.stopping = true; setTimeout(() => REC.mr && REC.mr.state !== 'inactive' && REC.mr.stop(), 600); } }
   requestAnimationFrame(loop);
 }
 function fit() {
@@ -1454,9 +1567,84 @@ function fit() {
   let sh = vh - pad * 2, sw = sh * 9 / 16; if (sw > vw - pad * 2) { sw = vw - pad * 2; sh = sw * 16 / 9; }
   const root = document.documentElement.style;
   root.setProperty('--sw', sw + 'px'); root.setProperty('--sh', sh + 'px'); root.setProperty('--u', (sh / H) + 'px');
-  U = sh / H; $('#stage').classList.toggle('full', pad === 0);
+  U = sh / H; const st = $('#stage'); st.classList.toggle('full', pad === 0); st.classList.toggle('n1', sw < 560); st.classList.toggle('n2', sw < 450);
   if (outroText) outroText.setAttribute('stroke-width', (1.5 / U).toFixed(2));   // = 1.5 CSS px on screen
   dirty = true;
+}
+
+/* =========================================================================
+   VIDEO EXPORT — MediaRecorder captures a clean 1080×1920 frame (canvas +
+   burned-in captions, no player UI) plus the Web Audio mix, in real time.
+   ========================================================================= */
+const REC = { on: false };
+function pickMime() {
+  // H.264 MP4 first (plays everywhere); then WebM; plain 'video/mp4' last, because some builds put VP9 inside it
+  const c = ['video/mp4;codecs=avc1.42E01F,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm', 'video/mp4'];
+  return (window.MediaRecorder && c.find(m => MediaRecorder.isTypeSupported(m))) || '';
+}
+function setRecUI() {
+  const b = $('#rec'); b.classList.toggle('recording', REC.on);
+  $('#recLbl').textContent = REC.on ? 'إيقاف ' + fmt(T) : 'حفظ الفيديو';
+  b.setAttribute('aria-label', REC.on ? 'إيقاف التسجيل وإلغاؤه' : 'حفظ الفيديو / Download Video');
+}
+function capText(x, el, font, y, op) {
+  const o = op * (+el.style.opacity || 0); if (o <= .01) return;
+  const m = /translateY\(([-\d.]+)px\)/.exec(el.style.transform || ''), dy = m ? +m[1] / U : 0;
+  x.globalAlpha = o; x.font = font; x.fillText(el.textContent.trim(), 540, y + dy);
+}
+function drawCaptionsCanvas(x) {
+  const F = '"IBM Plex Sans Arabic", system-ui, sans-serif';
+  x.save(); x.direction = 'rtl'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#fff';
+  x.shadowColor = 'rgba(0,0,0,.65)'; x.shadowBlur = 20; x.shadowOffsetY = 4;
+  capText(x, $('#cap1 .line'), `700 80px ${F}`, 1510, 1);
+  [['#cap2', C.red], ['#cap3', '#19a52e'], ['#cap4', '#ffffff']].forEach(([id, col]) => {
+    const cap = $(id), op = +cap.style.opacity || 0; if (op <= 0) return;
+    const parts = cap.querySelectorAll('.part');
+    capText(x, parts[0], `700 176px ${F}`, 1486, op);
+    const so = op * (+parts[1].style.opacity || 0), sx = +(/scaleX\(([\d.]+)\)/.exec(parts[1].style.transform || '') || [0, 0])[1];
+    if (so > .01 && sx > 0) { x.globalAlpha = so; x.fillStyle = col; for (let px = 700 - 28; px > 700 - 320 * sx - 28; px -= 44) x.fillRect(Math.max(px, 700 - 320 * sx), 1603, Math.min(28, px + 28 - (700 - 320 * sx)), 9); x.fillStyle = '#fff'; }
+    capText(x, parts[2], `400 64px ${F}`, 1684, op);
+  });
+  const c5 = $('#cap5'), o5 = +c5.style.opacity || 0;
+  if (o5 > .01) {
+    x.globalAlpha = o5; x.font = `700 215px "Aref Ruqaa", "Amiri", serif`; x.textBaseline = 'alphabetic';
+    x.shadowColor = 'rgba(255,255,255,.55)'; x.shadowBlur = 12; x.shadowOffsetY = 0;
+    x.strokeStyle = '#fff'; x.lineWidth = 3; x.lineJoin = 'round';
+    x.setLineDash([outroLen, outroLen]); x.lineDashOffset = +outroText.getAttribute('stroke-dashoffset') || 0;
+    x.strokeText(outroText.textContent, 540, 1382); x.setLineDash([]);
+    x.textBaseline = 'middle'; x.shadowColor = 'rgba(0,0,0,.65)'; x.shadowBlur = 20; x.shadowOffsetY = 4;
+    if ('wordSpacing' in x) x.wordSpacing = '54px';
+    capText(x, c5.querySelector('.wide'), `700 70px ${F}`, 1540, 1);
+  }
+  x.restore();
+}
+function recFrame() { REC.x.drawImage(cv, 0, 0, 1080, 1920); drawCaptionsCanvas(REC.x); $('#recLbl').textContent = 'إيقاف ' + fmt(T); }
+function startRecording() {
+  if (!ready) return;
+  if (REC.on) { REC.cancel = true; if (REC.mr && REC.mr.state !== 'inactive') REC.mr.stop(); pause(); toast('تم إلغاء التسجيل'); return; }
+  if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) { toast('هذا المتصفح لا يدعم حفظ الفيديو'); return; }
+  AU.init(); AU.resume();
+  REC.cv = REC.cv || Object.assign(document.createElement('canvas'), { width: 1080, height: 1920 }); REC.x = REC.cv.getContext('2d');
+  const tracks = [...REC.cv.captureStream(30).getVideoTracks()];
+  if (AU.recDest) tracks.push(...AU.recDest.stream.getAudioTracks());
+  REC.mime = pickMime();
+  try { REC.mr = new MediaRecorder(new MediaStream(tracks), Object.assign({ videoBitsPerSecond: 12e6, audioBitsPerSecond: 192e3 }, REC.mime ? { mimeType: REC.mime } : {})); }
+  catch (e) { toast('تعذّر بدء التسجيل'); return; }
+  REC.chunks = []; REC.cancel = false; REC.stopping = false;
+  REC.mr.ondataavailable = e => { if (e.data && e.data.size) REC.chunks.push(e.data); };
+  REC.mr.onstop = finishRecording;
+  if (playing) pause();
+  seek(0); prevT = -.001; render(0); updateCaptions(0);
+  REC.on = true; recFrame(); REC.mr.start(500);
+  play(); setRecUI(); toast('جارٍ التسجيل — ٣٥ ثانية، ابقَ على هذه الصفحة');
+}
+function finishRecording() {
+  const cancelled = REC.cancel; REC.on = false; REC.stopping = false; setRecUI();
+  if (cancelled || !REC.chunks.length) { REC.chunks = []; return; }
+  const type = (REC.mr.mimeType || REC.mime || 'video/webm').split(';')[0], ext = type.includes('mp4') ? 'mp4' : 'webm';
+  const blob = new Blob(REC.chunks, { type }); REC.chunks = [];
+  try { const u = URL.createObjectURL(blob), a = document.createElement('a'); a.href = u; a.download = 'oman-thread-story.' + ext; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 8000); toast('تم حفظ الفيديو ✓ ' + ext.toUpperCase()); }
+  catch (e) { toast('تعذّر تنزيل الفيديو'); }
 }
 
 /* =========================================================================
@@ -1507,7 +1695,7 @@ function buildDrawer() {
   $('#dlJson').onclick = () => download('oman-thread-story-prompts.json', JSON.stringify(PROMPT_PIPELINE, null, 2), 'application/json');
 }
 let wasPlaying = false;
-function openDrawer() { wasPlaying = playing; if (playing) pause(); $('#drawer').classList.add('on'); $('#scrim').classList.add('on'); $('#drawer').setAttribute('aria-hidden', 'false'); $('#closeDrawer').focus(); }
+function openDrawer() { if (recBusy()) return; wasPlaying = playing; if (playing) pause(); $('#drawer').classList.add('on'); $('#scrim').classList.add('on'); $('#drawer').setAttribute('aria-hidden', 'false'); $('#closeDrawer').focus(); }
 function closeDrawer() { $('#drawer').classList.remove('on'); $('#scrim').classList.remove('on'); $('#drawer').setAttribute('aria-hidden', 'true'); if (wasPlaying) play(); }
 
 /* =========================================================================
@@ -1516,7 +1704,11 @@ function closeDrawer() { $('#drawer').classList.remove('on'); $('#scrim').classL
 function buildAssets(flagImg) {
   A.flagTex = buildFlagTexture(flagImg);
   { const c = document.createElement('canvas'); c.width = cv.width; c.height = cv.height; A.clothBuf = { c, x: c.getContext('2d') }; }
-  A.burlap = buildBurlap(); A.light1 = buildLight1(); initS1();
+  A.burlap = buildBurlap(); A.light1 = buildLight1(); A.hole = buildHole(); A.endAO = buildEndAO();
+  A.cordSpr = {}; [C.red, C.white, C.green].forEach((col, k) => A.cordSpr[col] = [buildCord(col, 40 + k * 2), buildCord(col, 41 + k * 2)]);
+  initS1();
+  A.s1cache = mk(W, H); A.s1noRed = mk(W, H); put(A.s1noRed.x, A.burlap); for (const c of CORDS) if (!c.red) drawCord(A.s1noRed.x, c, 1);
+  { const c = document.createElement('canvas'); c.width = cv.width; c.height = cv.height; A.layer1 = { c, x: c.getContext('2d') }; }
   A.sky2 = buildSky2(); A.dunes = DUNES.map((_, i) => buildDune(i)); A.fort = buildFort();
   let mx = 0; for (let X = 360; X <= 840; X += 10) mx = Math.max(mx, duneY(2, X)); A.fortBase = mx + 40;
   A.glow2 = buildSunGlow(300, 1110, 900, 'rgba(255,170,90,.35)');
@@ -1546,6 +1738,7 @@ function boot() {
 
   $('#start').onclick = play; $('#play').onclick = toggle; $('#replay').onclick = replay;
   $('#mute').onclick = () => { AU.setMuted(!AU.muted); setMuteIcon(); try { localStorage.setItem('omanThreadsMuted', AU.muted ? '1' : '0'); } catch (e) { } };
+  $('#rec').onclick = startRecording;
   $('#openPrompts').onclick = openDrawer; $('#closeDrawer').onclick = closeDrawer; $('#scrim').onclick = closeDrawer;
   const bar = $('#bar'); let drag = false;
   const seekEv = e => { const r = bar.getBoundingClientRect(); seek((e.clientX - r.left) / r.width * DUR); $('#intro').classList.add('hide'); };
@@ -1561,8 +1754,8 @@ function boot() {
     else if (e.key === 'm' || e.key === 'M') $('#mute').click(); else if (e.key === 'p' || e.key === 'P') openDrawer();
   });
   addEventListener('resize', fit);
-  document.addEventListener('visibilitychange', () => { if (document.hidden && playing) pause(); });
-  window.OMAN_THREADS = { seek: t => { seek(t); render(T); updateCaptions(T); updateUI(); }, play, pause, get t() { return T; } };
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) return; if (REC.on) startRecording(); else if (playing) pause(); });
+  window.OMAN_THREADS = { record: startRecording, seek: t => { seek(t); render(T); updateCaptions(T); updateUI(); }, play, pause, get t() { return T; } };
 }
 boot();
 </script>
