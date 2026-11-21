@@ -1,7 +1,7 @@
 <!-- Generated from PROMPT_PIPELINE in index.html -->
 # Omani National Identity & Flag — Fiber, Wool & Silk Thread Storytelling
 
-**Format:** Vertical 9:16 · 1080×1920 · 30 fps · 35.0 s (1050 frames)
+**Format:** Vertical 9:16 · 1080×1920 · 30 fps · 40.0 s (1200 frames)
 
 ## Style lock
 - Seed: `--seed 7716`
@@ -141,8 +141,8 @@ Start frame: S4 END. End frame: S5 START. The dove banks and glides directly tow
 ---
 
 ## Scene 5 · The Flag of Oman — Outro · الختام — راية الوطن
-**00:27–00:35** · F810–F1049 @30fps  
-On-screen text: Hollow calligraphic سلطنة عُمان (stroke reveal 00:29.4–00:32.4, F882–F972) · Subtitle عِزٌّ وَفَخْر wide spacing (in 00:32.0, F960) · hold to end
+**00:27–00:40** · F810–F1199 @30fps  
+On-screen text: Hollow calligraphic سلطنة عُمان (stroke reveal 00:29.4–00:32.4, F882–F972) · Subtitle عِزٌّ وَفَخْر wide spacing (in 00:32.0, F960) · title fades out 00:35 · credits card 00:35.6–00:40 (F1068–F1199): اسم الطالب: عبدالعزيز بن عمر السعيدي · الصف: الأول · المدرسة: الريان للتعلم الأساسي
 
 ### Midjourney v6 — START keyframe
 ```
@@ -159,6 +159,6 @@ The national flag of the Sultanate of Oman made of woven silk fabric waving maje
 Start frame: S5 START. End frame: S5 END. The dove flies into the lens; its wings unravel into red, white and green silk ribbons that sweep across the frame and weave together into the flag of Oman; the flag then ripples majestically in slow motion (0.5x) from the pole, golden backlight glinting through the silk weave, floating golden dust. Hold the waving flag for the final 3 seconds. Keep the flag geometry stable: vertical red hoist band with white emblem, white top band, red middle band, green bottom band. 24 fps.
 ```
 - Camera: Kling: Static after 2 s (slight Zoom +1) · Runway: Zoom In 1 then static
-- Render: Render 10 s → retime to 8.0 s · place at F810
+- Render: Render 10 s → retime to 8.0 s · place at F810, then hold the waving flag to F1199 (add 5 s of the clip in reverse or a Kling extend) under the credits card
 
 > **Note:** AI video models often distort flag stripes and the emblem. For an accurate flag, screen-record the last 5 s of this web experience (it renders the official flag artwork, vectorised from the reference image: 1600×914, hoist band = 1/3 of the length) and use a frame of it as the END keyframe, or composite official flag artwork over the AI plate.

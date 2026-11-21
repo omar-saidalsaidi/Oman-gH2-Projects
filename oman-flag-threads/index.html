@@ -2,7 +2,7 @@
 <!--
   ╔══════════════════════════════════════════════════════════════════════════╗
   ║  نسيجُ عُمان — Fiber, Wool & Silk Thread Storytelling                       ║
-  ║  A 35-second vertical (9:16 · 1080×1920) real-time motion experience       ║
+  ║  A 40-second vertical (9:16 · 1080×1920) real-time motion experience       ║
   ║  celebrating the national identity and flag of the Sultanate of Oman.      ║
   ╠══════════════════════════════════════════════════════════════════════════╣
   ║  ARCHITECTURE                                                              ║
@@ -26,7 +26,8 @@
   ║   S2 00:06–00:13  F180–389   Crimson Red             الأحمر                 ║
   ║   S3 00:13–00:20  F390–599   Emerald Green           الأخضر                 ║
   ║   S4 00:20–00:27  F600–809   Pure White              الأبيض                 ║
-  ║   S5 00:27–00:35  F810–1049  Flag of Oman Outro      راية الوطن             ║
+  ║   S5 00:27–00:40  F810–1199  Flag of Oman Outro      راية الوطن             ║
+  ║      00:35–00:40             Student credits card                           ║
   ╠══════════════════════════════════════════════════════════════════════════╣
   ║  AI VIDEO PIPELINE: the full, copyable Midjourney v6 keyframe prompts and  ║
   ║  Kling AI / Runway Gen-3 image-to-video morph prompts live in the          ║
@@ -113,6 +114,14 @@ button{font:inherit;color:inherit}
 #cap5 .wide{
   font-size:calc(70*var(--u));word-spacing:calc(54*var(--u));font-weight:700;margin-top:calc(6*var(--u));
 }
+#cap6{inset:0;display:block}
+#cap6 .ccard{position:absolute;left:calc(110*var(--u));top:calc(1170*var(--u));width:calc(860*var(--u));height:calc(494*var(--u));
+  border-radius:calc(36*var(--u));background:rgba(15,10,6,.62);box-shadow:0 calc(10*var(--u)) calc(40*var(--u)) rgba(0,0,0,.4);
+  outline:calc(3*var(--u)) dashed rgba(255,255,255,.8);outline-offset:calc(-16*var(--u))}
+#cap6 .cline{position:absolute;inset-inline:0;text-align:center;font-family:"IBM Plex Sans Arabic",sans-serif;line-height:1.4;
+  top:calc((var(--y) - var(--fs) * .7) * var(--u));font-size:calc(var(--fs) * var(--u));text-shadow:0 4px 20px rgba(0,0,0,.65)}
+#cap6 .ck{--fs:40;font-weight:400;color:var(--sand)}
+#cap6 .cv{--fs:62;font-weight:700;color:#fff}
 /* CSS spec of the hollow calligraphic outline (also mirrored on the SVG text) */
 .hollow{-webkit-text-stroke:1.5px #FFFFFF;color:transparent}
 
@@ -250,13 +259,21 @@ button:focus-visible{outline:2px solid #fff;outline-offset:2px}
     <div class="sub wide part" aria-label="عِزٌّ وَفَخْر">عِــزٌّ وَفَــخْــر</div>
   </div>
 
+  <!-- Closing credits (00:35–00:40) — mirrored on the recording canvas in drawCaptionsCanvas -->
+  <div class="cap" id="cap6" aria-label="اسم الطالب: عبدالعزيز بن عمر السعيدي · الصف: الأول · المدرسة: الريان للتعلم الأساسي">
+    <div class="ccard"></div>
+    <div class="cline ck" style="--y:1236">اسم الطالب</div><div class="cline cv" style="--y:1300">عبدالعزيز بن عمر السعيدي</div>
+    <div class="cline ck" style="--y:1376">الصف</div><div class="cline cv" style="--y:1440">الأول</div>
+    <div class="cline ck" style="--y:1516">المدرسة</div><div class="cline cv" style="--y:1580">الريان للتعلم الأساسي</div>
+  </div>
+
   <!-- Intro / poster -->
   <div id="intro">
     <div>
       <div class="kicker">قصةٌ تُروى بالخيوط</div>
       <h1>نسيجُ عُمان</h1>
       <div class="flagline"><i style="background:#fff"></i><i style="background:var(--red)"></i><i style="background:var(--green)"></i></div>
-      <p>تجربة حركية عمودية · ٣٥ ثانية</p>
+      <p>تجربة حركية عمودية · ٤٠ ثانية</p>
       <button id="start" disabled>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M7 4v16l13-8z"/></svg>
         <span id="startLbl">جارٍ نسج الخيوط…</span>
@@ -267,16 +284,16 @@ button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 
   <!-- Player controls -->
   <div id="ui" dir="ltr">
-    <div id="bar" role="slider" aria-label="شريط التقدّم" aria-valuemin="0" aria-valuemax="35" aria-valuenow="0" tabindex="0">
+    <div id="bar" role="slider" aria-label="شريط التقدّم" aria-valuemin="0" aria-valuemax="40" aria-valuenow="0" tabindex="0">
       <div id="fill"></div>
-      <div class="mk" style="left:17.143%"></div><div class="mk" style="left:37.143%"></div>
-      <div class="mk" style="left:57.143%"></div><div class="mk" style="left:77.143%"></div>
+      <div class="mk" style="left:15%"></div><div class="mk" style="left:32.5%"></div>
+      <div class="mk" style="left:50%"></div><div class="mk" style="left:67.5%"></div>
       <div id="knob"></div>
     </div>
     <div class="row">
       <button class="btn" id="play" aria-label="تشغيل"><svg viewBox="0 0 24 24" id="playIcon"><path d="M7 4v16l13-8z"/></svg></button>
       <button class="btn" id="replay" aria-label="إعادة"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg></button>
-      <span id="time">00:00 / 00:35</span>
+      <span id="time">00:00 / 00:40</span>
       <span id="sceneName">البداية والنسيج</span>
       <button class="btn" id="mute" aria-label="كتم الصوت"><svg viewBox="0 0 24 24" id="muteIcon"></svg></button>
       <button class="btn pill" id="openPrompts" aria-label="عرض وتصدير برومبتات الفيديو">
@@ -323,7 +340,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 /*PROMPTS_START*/
 const PROMPT_PIPELINE = {
   project: "Omani National Identity & Flag — Fiber, Wool & Silk Thread Storytelling",
-  format: "Vertical 9:16 · 1080×1920 · 30 fps · 35.0 s (1050 frames)",
+  format: "Vertical 9:16 · 1080×1920 · 30 fps · 40.0 s (1200 frames)",
   styleLock: {
     seed: "--seed 7716",
     sref: "After generating Scene 1 END, append  --sref <S1-END image URL> --sw 150  to every later Midjourney prompt for a consistent textile look.",
@@ -390,13 +407,13 @@ const PROMPT_PIPELINE = {
     },
     {
       id: 5, ar: "الختام — راية الوطن", en: "The Flag of Oman — Outro",
-      time: "00:27–00:35", frames: "F810–F1049 @30fps", color: "#9E1115",
-      text: "Hollow calligraphic سلطنة عُمان (stroke reveal 00:29.4–00:32.4, F882–F972) · Subtitle عِزٌّ وَفَخْر wide spacing (in 00:32.0, F960) · hold to end",
+      time: "00:27–00:40", frames: "F810–F1199 @30fps", color: "#9E1115",
+      text: "Hollow calligraphic سلطنة عُمان (stroke reveal 00:29.4–00:32.4, F882–F972) · Subtitle عِزٌّ وَفَخْر wide spacing (in 00:32.0, F960) · title fades out 00:35 · credits card 00:35.6–00:40 (F1068–F1199): اسم الطالب: عبدالعزيز بن عمر السعيدي · الصف: الأول · المدرسة: الريان للتعلم الأساسي",
       mjStart: "A white silk dove flying directly toward the camera with wings spread, its wing feathers unravelling into long flowing ribbons of crimson red, pure white and emerald green silk streaming outward, warm golden sky, sunlit translucent fibers, handcrafted textile art, dynamic, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 250 --seed 7716",
       mjEnd: "The national flag of the Sultanate of Oman made of woven silk fabric waving majestically from a golden pole: a vertical crimson red band along the hoist with the white national emblem (a khanjar dagger in its curved sheath over two crossed swords) finely embroidered in the upper hoist, and three equal horizontal bands to the fly: white on top, red in the middle, green at the bottom, the vertical red hoist band spanning one third of the flag length, flag proportions 7:4, warm golden sunset sky, backlit silk sheen, flag in the upper half of the frame with clear golden sky below for a title, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 200 --seed 7716",
       motion: "Start frame: S5 START. End frame: S5 END. The dove flies into the lens; its wings unravel into red, white and green silk ribbons that sweep across the frame and weave together into the flag of Oman; the flag then ripples majestically in slow motion (0.5x) from the pole, golden backlight glinting through the silk weave, floating golden dust. Hold the waving flag for the final 3 seconds. Keep the flag geometry stable: vertical red hoist band with white emblem, white top band, red middle band, green bottom band. 24 fps.",
       camera: "Kling: Static after 2 s (slight Zoom +1) · Runway: Zoom In 1 then static",
-      render: "Render 10 s → retime to 8.0 s · place at F810",
+      render: "Render 10 s → retime to 8.0 s · place at F810, then hold the waving flag to F1199 (add 5 s of the clip in reverse or a Kling extend) under the credits card",
       note: "AI video models often distort flag stripes and the emblem. For an accurate flag, screen-record the last 5 s of this web experience (it renders the official flag artwork, vectorised from the reference image: 1600×914, hoist band = 1/3 of the length) and use a frame of it as the END keyframe, or composite official flag artwork over the AI plate.",
       bridge: ""
     }
@@ -407,8 +424,8 @@ const PROMPT_PIPELINE = {
 /* =========================================================================
    CORE CONSTANTS & UTILITIES
    ========================================================================= */
-const W = 1080, H = 1920, DUR = 35;
-const SC = [0, 6, 13, 20, 27, 35];          // scene boundaries (s)
+const W = 1080, H = 1920, DUR = 40;
+const SC = [0, 6, 13, 20, 27, 40];          // scene boundaries (s)
 const TH = 0.75;                            // half-width of Z-morph transition (s)
 const SCENE_NAMES = ['البداية والنسيج', 'الأحمر · الأصالة والعزم', 'الأخضر · النماء والطبيعة', 'الأبيض · السلام واللبان', 'الختام · راية الوطن'];
 const C = { red:'#DB161B', redD:'#9E1115', green:'#008000', greenD:'#2E5A36', white:'#FFFFFF', sand:'#D9C7B2', sandD:'#C4AE94', falaj:'#4A8B9C' };
@@ -1429,7 +1446,10 @@ function updateCaptions(t) {
     anim(parts[1], t, a + .4, a + 1.4, C0.c, C0.d, 'x');
     anim(parts[2], t, a + .7, a + 1.6, C0.c + .1, C0.d);
   }
-  const c5 = $('#cap5'); c5.style.opacity = sstep(29.2, 29.6, t);
+  const c5 = $('#cap5'); c5.style.opacity = sstep(29.2, 29.6, t) * (1 - sstep(35, 35.7, t));
+  const c6 = $('#cap6'); c6.style.opacity = t > 35.4 ? 1 : 0;
+  anim(c6.querySelector('.ccard'), t, 35.5, 36.3, 99, 100);
+  c6.querySelectorAll('.cline').forEach((el, i) => { const a = 35.9 + (i >> 1) * .35 + (i & 1) * .12; anim(el, t, a, a + .7, 99, 100); });
   outroText.setAttribute('stroke-dashoffset', (outroLen * (1 - eIO((t - 29.4) / 3))).toFixed(1));
   anim(c5.querySelector('.wide'), t, 32, 33.2, 99, 100);
 }
@@ -1518,6 +1538,7 @@ EV.push({ t: 13.7, f: () => { AU.pluck(N.G4); AU.pluck(N.A4, .3); AU.pluck(N.B4,
 EV.push({ t: 20.7, f: () => { AU.bell(N.A4); AU.bell(N.D5, .45); } });
 EV.push({ t: 23.6, f: () => AU.bell(N.Fs4 * 2, 0, .07) });
 EV.push({ t: 29.4, f: () => { [N.D4, N.Eb4, N.Fs4, N.G4, N.A4].forEach((f, k) => AU.pluck(f, k * .3, .3)); } });
+EV.push({ t: 35.9, f: () => { AU.bell(N.A4, 0, .1); AU.bell(N.D5, .35, .1); AU.pluck(N.D4, .7, .22); } });
 EV.push({ t: 32.0, f: () => { AU.bell(N.D5, 0, .14); AU.pluck(N.D3, 0, .3); AU.pluck(N.A3, .05, .26); AU.pluck(N.D4, .1, .26); AU.pluck(N.Fs4, .15, .22); } });
 function audioTick(a, b) { if (!AU.ctx) return; for (const e of EV) if (e.t > a && e.t <= b) e.f(); }
 
@@ -1615,7 +1636,19 @@ function drawCaptionsCanvas(x) {
     x.textBaseline = 'middle'; x.shadowColor = 'rgba(0,0,0,.65)'; x.shadowBlur = 20; x.shadowOffsetY = 4;
     if ('wordSpacing' in x) x.wordSpacing = '54px';
     capText(x, c5.querySelector('.wide'), `700 70px ${F}`, 1540, 1);
+    if ('wordSpacing' in x) x.wordSpacing = '0px';
   }
+  const c6 = $('#cap6'), card = c6.querySelector('.ccard'), oc = (+c6.style.opacity || 0) * (+card.style.opacity || 0);
+  if (oc > .01) {
+    x.save(); x.globalAlpha = oc; x.shadowColor = 'rgba(0,0,0,.4)'; x.shadowBlur = 40; x.shadowOffsetY = 10;
+    x.fillStyle = 'rgba(15,10,6,.62)'; rr(x, 110, 1170, 860, 494, 36); x.fill();
+    x.shadowColor = 'transparent'; x.strokeStyle = 'rgba(255,255,255,.8)'; x.lineWidth = 3; x.setLineDash([12, 9]); rr(x, 126, 1186, 828, 462, 22); x.stroke(); x.setLineDash([]);
+    x.restore();
+  }
+  if (+c6.style.opacity) c6.querySelectorAll('.cline').forEach(el => {
+    const val = el.classList.contains('cv'); x.fillStyle = val ? '#fff' : C.sand;
+    capText(x, el, `${val ? 700 : 400} ${val ? 62 : 40}px ${F}`, +el.style.getPropertyValue('--y'), 1);
+  });
   x.restore();
 }
 function recFrame() { REC.x.drawImage(cv, 0, 0, 1080, 1920); drawCaptionsCanvas(REC.x); $('#recLbl').textContent = 'إيقاف ' + fmt(T); }
@@ -1636,7 +1669,7 @@ function startRecording() {
   if (playing) pause();
   seek(0); prevT = -.001; render(0); updateCaptions(0);
   REC.on = true; recFrame(); REC.mr.start(500);
-  play(); setRecUI(); toast('جارٍ التسجيل — ٣٥ ثانية، ابقَ على هذه الصفحة');
+  play(); setRecUI(); toast('جارٍ التسجيل — ٤٠ ثانية، ابقَ على هذه الصفحة');
 }
 function finishRecording() {
   const cancelled = REC.cancel; REC.on = false; REC.stopping = false; setRecUI();
