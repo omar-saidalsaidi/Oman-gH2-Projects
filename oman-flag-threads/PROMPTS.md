@@ -151,7 +151,7 @@ A white silk dove flying directly toward the camera with wings spread, its wing 
 
 ### Midjourney v6 — END keyframe
 ```
-The national flag of the Sultanate of Oman made of woven silk fabric waving majestically from a golden pole: a vertical crimson red band along the hoist with the white national emblem (a khanjar dagger in its curved sheath over two crossed swords) finely embroidered in the upper hoist, and three horizontal bands to the fly: white on top, red in the middle, green at the bottom, flag ratio 1:2, warm golden sunset sky, backlit silk sheen, flag in the upper half of the frame with clear golden sky below for a title, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 200 --seed 7716
+The national flag of the Sultanate of Oman made of woven silk fabric waving majestically from a golden pole: a vertical crimson red band along the hoist with the white national emblem (a khanjar dagger in its curved sheath over two crossed swords) finely embroidered in the upper hoist, and three equal horizontal bands to the fly: white on top, red in the middle, green at the bottom, the vertical red hoist band spanning one third of the flag length, flag proportions 7:4, warm golden sunset sky, backlit silk sheen, flag in the upper half of the frame with clear golden sky below for a title, cinematic, ultra-detailed, no text --ar 9:16 --v 6.0 --style raw --s 200 --seed 7716
 ```
 
 ### Kling AI / Runway Gen-3 — image-to-video (Start → End)
@@ -161,4 +161,4 @@ Start frame: S5 START. End frame: S5 END. The dove flies into the lens; its wing
 - Camera: Kling: Static after 2 s (slight Zoom +1) · Runway: Zoom In 1 then static
 - Render: Render 10 s → retime to 8.0 s · place at F810
 
-> **Note:** AI video models often distort flag stripes and the emblem. For an accurate flag, screen-record the last 5 s of this web experience (procedural flag at correct 1:2 ratio, hoist band = 1/4 of the length) and use a frame of it as the END keyframe, or composite official flag artwork over the AI plate.
+> **Note:** AI video models often distort flag stripes and the emblem. For an accurate flag, screen-record the last 5 s of this web experience (it renders the official flag artwork, vectorised from the reference image: 1600×914, hoist band = 1/3 of the length) and use a frame of it as the END keyframe, or composite official flag artwork over the AI plate.
