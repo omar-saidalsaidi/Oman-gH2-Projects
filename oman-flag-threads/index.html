@@ -1643,8 +1643,7 @@ function finishRecording() {
   if (cancelled || !REC.chunks.length) { REC.chunks = []; return; }
   const type = (REC.mr.mimeType || REC.mime || 'video/webm').split(';')[0], ext = type.includes('mp4') ? 'mp4' : 'webm';
   const blob = new Blob(REC.chunks, { type }); REC.chunks = [];
-  try { const u = URL.createObjectURL(blob), a = document.createElement('a'); a.href = u; a.download = 'oman-thread-story.' + ext; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 8000); toast('تم حفظ الفيديو ✓ ' + ext.toUpperCase()); }
-  catch (e) { toast('تعذّر تنزيل الفيديو'); }
+  saveFile('oman-thread-story.' + ext, blob, 'تم حفظ الفيديو ✓ ' + ext.toUpperCase(), 'تعذّر تنزيل الفيديو');
 }
 
 /* =========================================================================
@@ -1666,10 +1665,23 @@ function toMarkdown() {
   }
   return s;
 }
-function download(name, text, type) {
-  try { const b = new Blob([text], { type }), u = URL.createObjectURL(b), a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000); toast('تم التنزيل ✓'); }
-  catch (e) { copyText(text).then(() => toast('تعذّر التنزيل — تم النسخ بدلاً منه')); }
+/* File saves: inside the claude.ai artifact viewer, pages may not download directly, so use its
+   `downloads` capability (the viewer confirms each save); everywhere else, a normal browser download. */
+const DOWNLOADS = (window.claude && window.claude.use) ? window.claude.use('downloads').catch(() => null) : Promise.resolve(null);
+function browserSave(name, blob) {
+  const u = URL.createObjectURL(blob), a = document.createElement('a'); a.href = u; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 8000);
 }
+async function saveFile(name, blob, okMsg, failMsg) {
+  const dl = await DOWNLOADS;
+  if (dl) {
+    try { await dl.save({ filename: name, data: blob }); toast(okMsg); }
+    catch (e) { const c = e && e.code; toast(c === 'declined' ? 'تم إلغاء الحفظ' : c === 'rate_limited' ? 'نافذة حفظ مفتوحة بالفعل — حاول بعد قليل' : failMsg); }
+    return;
+  }
+  try { browserSave(name, blob); toast(okMsg); } catch (e) { toast(failMsg); }
+}
+function download(name, text, type) { saveFile(name, new Blob([text], { type }), 'تم التنزيل ✓', 'تعذّر التنزيل'); }
 function esc(s) { return s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
 function buildDrawer() {
   const P = PROMPT_PIPELINE, L = P.styleLock, body = $('#dbody'), store = [];
