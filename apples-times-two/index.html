@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تفاحتان في كل طبق</title>
+<style>
+  :root {
+    --bg: #f5f1e8;
+    --card: #fffdf8;
+    --ink: #3a3a3a;
+    --muted: #7a756b;
+    --primary: #3f8a7e;
+    --primary-dark: #2f6d63;
+    --primary-soft: #dcefe9;
+    --apple: #d65a4f;
+    --apple-dark: #a8433b;
+    --leaf: #6aa36a;
+    --stem: #7a5a3c;
+    --plate: #ffffff;
+    --plate-rim: #ddd4c2;
+    --glow: #f6dd8e;
+    --good: #4f9d69;
+    --good-soft: #e1f2e6;
+    --bad: #c9785f;
+    --bad-soft: #f8e6df;
+    --radius: 22px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Kufi Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, "Geeza Pro", system-ui, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  header {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 16px 16px 4px;
+    text-align: center;
+  }
+  h1 {
+    margin: 0 0 10px;
+    font-size: clamp(1.5rem, 5.5vw, 2.1rem);
+    color: var(--primary-dark);
+  }
+  .stages {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .stage-pill {
+    border: 2px solid var(--plate-rim);
+    background: var(--card);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .stage-pill.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 12px 16px 40px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px 16px 24px;
+    box-shadow: 0 2px 10px rgba(80, 60, 30, 0.07);
+    text-align: center;
+  }
+  .progress {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+  .prompt {
+    font-size: clamp(1.3rem, 5vw, 1.7rem);
+    font-weight: 700;
+    margin: 4px 0 4px;
+  }
+  .hint {
+    color: var(--muted);
+    margin: 0 0 12px;
+    min-height: 1.6em;
+  }
+  .plates {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px 12px;
+    margin: 18px 0 8px;
+  }
+  .plate {
+    position: relative;
+    width: clamp(78px, 24vw, 132px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 3px solid var(--plate-rim);
+    background: radial-gradient(circle, var(--plate) 52%, #f1ebdf 53%, #f1ebdf 58%, var(--plate) 59%);
+    padding: 0;
+    font: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2%;
+    transition: box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+  }
+  button.plate { cursor: pointer; }
+  button.plate:disabled { cursor: default; color: inherit; }
+  .plate.lit {
+    border-color: #e3bf55;
+    box-shadow: 0 0 0 6px var(--glow), 0 0 22px var(--glow);
+    transform: scale(1.06);
+  }
+  .plate.bump { animation: bump 0.35s; }
+  @keyframes bump {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+  .slot {
+    width: 38%;
+    aspect-ratio: 40 / 44;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .slot.empty::before {
+    content: "";
+    width: 80%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px dashed #d8cfbd;
+  }
+  .slot svg { width: 100%; height: 100%; display: block; }
+  .slot.pop svg { animation: pop 0.35s ease-out; }
+  @keyframes pop {
+    0% { transform: scale(0.2); opacity: 0; }
+    70% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+  .badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: #fff;
+    border-radius: 999px;
+    min-width: 40px;
+    padding: 0 10px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+  }
+  .plate.counted .badge { opacity: 1; }
+  .count-line {
+    font-size: clamp(1.4rem, 6vw, 1.9rem);
+    font-weight: 700;
+    color: var(--primary-dark);
+    min-height: 1.7em;
+    margin: 6px 0;
+  }
+  .eq {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 6px 10px;
+    font-size: clamp(1.3rem, 6vw, 2rem);
+    font-weight: 700;
+    margin: 10px 0;
+  }
+  .eq.big { font-size: clamp(2rem, 11vw, 3.2rem); }
+  .eq .op { color: var(--muted); font-weight: 400; }
+  .eq .num-plates { color: var(--primary-dark); }
+  .eq .num-apples { color: var(--apple-dark); }
+  .eq .ans {
+    background: var(--primary-soft);
+    border-radius: 12px;
+    padding: 0 12px;
+  }
+  .eq .q {
+    border: 3px dashed var(--plate-rim);
+    border-radius: 12px;
+    padding: 0 18px;
+    color: var(--muted);
+  }
+  .sentence {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 10px;
+    font-size: clamp(1.1rem, 4.6vw, 1.4rem);
+    margin: 10px 0 4px;
+  }
+  .sentence .op { color: var(--muted); }
+  .reveal { animation: fadeUp 0.45s ease-out; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+  .options {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 18px 0 6px;
+  }
+  .opt {
+    min-width: 92px;
+    min-height: 72px;
+    font: inherit;
+    font-size: 2rem;
+    font-weight: 700;
+    border-radius: 18px;
+    border: 3px solid var(--plate-rim);
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .opt:not(:disabled):active { transform: scale(0.96); }
+  .opt.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+  .opt.right { background: var(--good-soft); border-color: var(--good); color: var(--good); }
+  .opt:disabled { cursor: default; }
+  .feedback {
+    min-height: 1.8em;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 8px 0;
+  }
+  .feedback.good { color: var(--good); }
+  .feedback.bad { color: var(--bad); }
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .btn {
+    font: inherit;
+    font-size: 1.3rem;
+    font-weight: 700;
+    min-height: 60px;
+    padding: 8px 28px;
+    border-radius: 999px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 3px 0 var(--primary-dark);
+  }
+  .btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--primary-dark); }
+  .btn.secondary {
+    background: var(--card);
+    color: var(--primary-dark);
+    border: 3px solid var(--primary);
+    box-shadow: none;
+  }
+  .btn:disabled { opacity: 0.5; cursor: default; }
+  .result-big {
+    font-size: clamp(2.4rem, 12vw, 3.6rem);
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin: 8px 0;
+  }
+  .stars { font-size: 2rem; letter-spacing: 4px; }
+  .hidden { display: none !important; }
+  button:focus-visible { outline: 4px solid #8cc3b8; outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>تفاحتان في كل طبق 🍎</h1>
+  <nav class="stages" aria-label="المراحل">
+    <button class="stage-pill" data-stage="1">١. ألعب وأفهم</button>
+    <button class="stage-pill" data-stage="2">٢. أعدّ وأختار</button>
+    <button class="stage-pill" data-stage="3">٣. تحدّي جدول ٢</button>
+  </nav>
+</header>
+<main id="app" aria-live="polite"></main>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- helpers ----------
+  const AR_DIGITS = "٠١٢٣٤٥٦٧٨٩";
+  const ar = (n) => String(n).replace(/\d/g, (d) => AR_DIGITS[d]);
+  const app = document.getElementById("app");
+  let token = 0;
+  const CANCEL = Symbol("cancel");
+
+  function newScreen(stage) {
+    token++;
+    app.innerHTML = "";
+    document.querySelectorAll(".stage-pill").forEach((p) =>
+      p.classList.toggle("active", Number(p.dataset.stage) === stage));
+    window.scrollTo(0, 0);
+    return token;
+  }
+  function sleep(ms, t) {
+    return new Promise((resolve, reject) =>
+      setTimeout(() => (t === token ? resolve() : reject(CANCEL)), ms));
+  }
+  function guard(fn) {
+    return (...args) => Promise.resolve(fn(...args)).catch((e) => { if (e !== CANCEL) throw e; });
+  }
+  function el(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function shuffle(a) {
+    a = a.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Arabic counting words
+  function platesWord(n) {
+    if (n === 1) return "طبق واحد";
+    if (n === 2) return "طبقان";
+    if (n <= 10) return ar(n) + " أطباق";
+    return ar(n) + " طبقًا";
+  }
+  function applesWord(n) {
+    if (n === 1) return "تفاحة واحدة";
+    if (n === 2) return "تفاحتان";
+    if (n <= 10) return ar(n) + " تفاحات";
+    return ar(n) + " تفاحة";
+  }
+
+  const APPLE_SVG =
+    '<svg viewBox="0 0 40 44" aria-hidden="true">' +
+    '<path d="M20 12 Q21 5 25 2" stroke="var(--stem)" stroke-width="2.6" fill="none" stroke-linecap="round"/>' +
+    '<path d="M22 8 Q30 2 35 7 Q28 12 22 8 Z" fill="var(--leaf)"/>' +
+    '<path d="M20 13 C11 6 2 13 4 26 C6 37 13 44 20 40 C27 44 34 37 36 26 C38 13 29 6 20 13 Z" fill="var(--apple)"/>' +
+    '<ellipse cx="12" cy="22" rx="3" ry="5.5" fill="#fff" opacity="0.35"/>' +
+    "</svg>";
+
+  // ---------- plates ----------
+  function makePlates(n, { filled = false, interactive = false, onAdd } = {}) {
+    const wrap = el("div", "plates");
+    const plates = [];
+    for (let i = 0; i < n; i++) {
+      const p = el(interactive ? "button" : "div", "plate");
+      p.dataset.apples = "0";
+      p.setAttribute("aria-label", "طبق " + ar(i + 1));
+      const badge = el("span", "badge");
+      p.appendChild(badge);
+      const s1 = el("span", "slot empty"), s2 = el("span", "slot empty");
+      p.append(s1, s2);
+      if (filled) { addApple(p, false); addApple(p, false); }
+      if (interactive) {
+        p.type = "button";
+        p.addEventListener("click", () => {
+          if (Number(p.dataset.apples) >= 2) {
+            p.classList.remove("bump"); void p.offsetWidth; p.classList.add("bump");
+            onAdd && onAdd(p, false);
+            return;
+          }
+          addApple(p, true);
+          onAdd && onAdd(p, true);
+        });
+      }
+      plates.push(p);
+      wrap.appendChild(p);
+    }
+    return { wrap, plates };
+  }
+  function addApple(p, animate) {
+    const count = Number(p.dataset.apples);
+    if (count >= 2) return false;
+    const slot = p.querySelectorAll(".slot")[count];
+    slot.classList.remove("empty");
+    if (animate) slot.classList.add("pop");
+    slot.innerHTML = APPLE_SVG;
+    p.dataset.apples = String(count + 1);
+    p.setAttribute("aria-label", p.getAttribute("aria-label").split("،")[0] + "، فيه " + applesWord(count + 1));
+    return true;
+  }
+  function clearCount(plates, line) {
+    plates.forEach((p) => { p.classList.remove("lit", "counted"); });
+    if (line) line.textContent = "";
+  }
+  // Light plates one by one and show the running count ٢، ٤، ٦ …
+  async function countAlong(plates, line, t, step = 750) {
+    clearCount(plates, line);
+    const seen = [];
+    for (let i = 0; i < plates.length; i++) {
+      const p = plates[i];
+      p.classList.add("lit", "counted");
+      p.querySelector(".badge").textContent = ar(2 * (i + 1));
+      seen.push(ar(2 * (i + 1)));
+      line.textContent = seen.join("، ");
+      await sleep(step, t);
+      p.classList.remove("lit");
+    }
+    plates.forEach((p) => p.classList.add("lit"));
+    await sleep(500, t);
+    plates.forEach((p) => p.classList.remove("lit"));
+  }
+
+  // ---------- equations (built as flex parts so RTL order is always: plates, ×, 2, =, total) ----------
+  function mulEq(n, total, { big = false, question = false } = {}) {
+    const e = el("div", "eq" + (big ? " big" : ""));
+    e.dataset.plates = String(n);
+    e.dataset.each = "2";
+    e.append(el("span", "num-plates", ar(n)), el("span", "op", "×"), el("span", "num-apples", ar(2)), el("span", "op", "="));
+    const last = question ? el("span", "q", "؟") : el("span", "ans", ar(total));
+    last.classList.add("result");
+    e.appendChild(last);
+    return e;
+  }
+  function addEq(n) {
+    const e = el("div", "eq");
+    for (let i = 0; i < n; i++) {
+      if (i) e.appendChild(el("span", "op", "+"));
+      e.appendChild(el("span", "num-apples", ar(2)));
+    }
+    e.append(el("span", "op", "="), el("span", "ans", ar(2 * n)));
+    return e;
+  }
+  function sentence(n) {
+    const s = el("div", "sentence");
+    s.append(el("span", null, platesWord(n)), el("span", "op", "×"),
+      el("span", null, "تفاحتان في كل طبق"), el("span", "op", "="),
+      el("strong", null, applesWord(2 * n)));
+    return s;
+  }
+  function reveal(node, parent) { node.classList.add("reveal"); parent.appendChild(node); return node; }
+
+  function makeOptions(correct) {
+    const pool = [correct - 2, correct + 2, correct - 4, correct + 4, correct - 1, correct + 1]
+      .filter((v) => v >= 1 && v <= 20 && v !== correct);
+    const even = shuffle(pool.filter((v) => v % 2 === 0));
+    const odd = shuffle(pool.filter((v) => v % 2 !== 0));
+    const distractors = even.concat(odd).slice(0, 2);
+    return shuffle([correct].concat(distractors));
+  }
+
+  // ======================= Stage 1 =======================
+  const STAGE1_ROUNDS = [3, 2, 4];
+
+  function stage1(round = 0) {
+    const t = newScreen(1);
+    const n = STAGE1_ROUNDS[round];
+    const card = el("section", "card");
+    card.dataset.screen = "stage1";
+    card.appendChild(el("div", "progress", "المرحلة ١ · المثال " + ar(round + 1) + " من " + ar(STAGE1_ROUNDS.length)));
+    card.appendChild(el("p", "prompt", "ضع تفاحتين في كل طبق"));
+    const hint = el("p", "hint", "اضغط على الطبق لتضع فيه تفاحة 👆");
+    card.appendChild(hint);
+    const line = el("div", "count-line");
+    const below = el("div");
+    let placed = 0;
+    const { wrap, plates } = makePlates(n, {
+      interactive: true,
+      onAdd: guard(async (p, added) => {
+        if (!added) { hint.textContent = "هذا الطبق فيه تفاحتان، اختر طبقًا آخر 🙂"; return; }
+        placed++;
+        hint.textContent = "وضعت " + applesWord(placed);
+        if (placed === 2 * n) {
+          plates.forEach((pl) => (pl.disabled = true));
+          hint.textContent = "رائع! لنعدّ معًا اثنين اثنين";
+          await sleep(600, t);
+          await countAlong(plates, line, t);
+          reveal(sentence(n), below);
+          await sleep(1100, t);
+          reveal(addEq(n), below);
+          await sleep(1100, t);
+          reveal(mulEq(n, 2 * n, { big: true }), below);
+          await sleep(500, t);
+          const actions = el("div", "actions");
+          const next = el("button", "btn", round + 1 < STAGE1_ROUNDS.length ? "التالي ←" : "إلى المرحلة ٢ ←");
+          next.dataset.action = "next";
+          next.addEventListener("click", () =>
+            round + 1 < STAGE1_ROUNDS.length ? stage1(round + 1) : stage2());
+          actions.appendChild(next);
+          reveal(actions, below);
+        }
+      }),
+    });
+    card.append(wrap, line, below);
+    app.appendChild(card);
+  }
+
+  // ======================= Stage 2 =======================
+  const STAGE2_COUNT = 5;
+
+  function stage2(list, idx = 0) {
+    if (!list) list = shuffle([2, 3, 4, 5, 6, 7, 8, 9, 10]).slice(0, STAGE2_COUNT);
+    const t = newScreen(2);
+    const n = list[idx];
+    const correct = 2 * n;
+    const card = el("section", "card");
+    card.dataset.screen = "stage2";
+    card.appendChild(el("div", "progress", "المرحلة ٢ · السؤال " + ar(idx + 1) + " من " + ar(list.length)));
+    card.appendChild(el("p", "prompt", "كم تفاحة في الكل؟"));
+    card.appendChild(el("p", "hint", "في كل طبق تفاحتان"));
+    const { wrap, plates } = makePlates(n, { filled: true });
+    const line = el("div", "count-line");
+    const opts = el("div", "options");
+    const fb = el("div", "feedback");
+    const below = el("div");
+    let busy = false;
+    makeOptions(correct).forEach((v) => {
+      const b = el("button", "opt", ar(v));
+      b.type = "button";
+      b.dataset.value = String(v);
+      b.addEventListener("click", guard(async () => {
+        if (busy || b.disabled) return;
+        if (v === correct) {
+          busy = true;
+          b.classList.add("right");
+          opts.querySelectorAll(".opt").forEach((o) => (o.disabled = true));
+          fb.className = "feedback good";
+          fb.textContent = "أحسنت! 🎉";
+          reveal(sentence(n), below);
+          reveal(mulEq(n, correct, { big: true }), below);
+          const actions = el("div", "actions");
+          const last = idx + 1 >= list.length;
+          const next = el("button", "btn", last ? "إلى التحدّي ←" : "التالي ←");
+          next.dataset.action = "next";
+          next.addEventListener("click", () => (last ? stage3() : stage2(list, idx + 1)));
+          actions.appendChild(next);
+          reveal(actions, below);
+        } else {
+          busy = true;
+          b.classList.add("wrong");
+          b.disabled = true;
+          fb.className = "feedback bad";
+          fb.textContent = "جرّب العدّ اثنين اثنين 👀";
+          const others = [...opts.querySelectorAll(".opt:not(.wrong)")];
+          others.forEach((o) => (o.disabled = true));
+          await countAlong(plates, line, t);
+          others.forEach((o) => (o.disabled = false));
+          fb.textContent = "الآن اختر الجواب مرة أخرى";
+          busy = false;
+        }
+      }));
+      opts.appendChild(b);
+    });
+    card.append(wrap, line, opts, fb, below);
+    app.appendChild(card);
+  }
+
+  // ======================= Stage 3 =======================
+  function stage3(order, idx = 0, score = 0) {
+    if (!order) order = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    if (idx >= order.length) return stage3End(score, order.length);
+    const t = newScreen(3);
+    const n = order[idx];
+    const correct = 2 * n;
+    let firstTry = true;
+    const card = el("section", "card");
+    card.dataset.screen = "stage3";
+    card.appendChild(el("div", "progress", "التحدّي · السؤال " + ar(idx + 1) + " من " + ar(order.length)));
+    const eq = mulEq(n, correct, { big: true, question: true });
+    card.appendChild(eq);
+    card.appendChild(el("p", "hint", platesWord(n) + "، وفي كل طبق تفاحتان"));
+
+    const showBtn = el("button", "btn secondary", "أرني الأطباق 🍽️");
+    showBtn.type = "button";
+    showBtn.dataset.action = "show";
+    const plateArea = el("div", "hidden");
+    const { wrap, plates } = makePlates(n, { filled: true });
+    const line = el("div", "count-line");
+    plateArea.append(wrap, line);
+    showBtn.addEventListener("click", guard(async () => {
+      showBtn.disabled = true;
+      plateArea.classList.remove("hidden");
+      await countAlong(plates, line, t, 600);
+      showBtn.disabled = false;
+      showBtn.textContent = "عُدّ مرة أخرى 🔁";
+    }));
+    const showRow = el("div", "actions");
+    showRow.appendChild(showBtn);
+
+    const opts = el("div", "options");
+    const fb = el("div", "feedback");
+    const below = el("div");
+    makeOptions(correct).forEach((v) => {
+      const b = el("button", "opt", ar(v));
+      b.type = "button";
+      b.dataset.value = String(v);
+      b.addEventListener("click", () => {
+        if (b.disabled) return;
+        if (v === correct) {
+          b.classList.add("right");
+          opts.querySelectorAll(".opt").forEach((o) => (o.disabled = true));
+          const q = eq.querySelector(".result");
+          q.className = "ans result";
+          q.textContent = ar(correct);
+          if (firstTry) score++;
+          fb.className = "feedback good";
+          fb.textContent = firstTry ? "صحيح من أول مرة! 🌟" : "أحسنت! 🎉";
+          reveal(sentence(n), below);
+          const actions = el("div", "actions");
+          const last = idx + 1 >= order.length;
+          const next = el("button", "btn", last ? "النتيجة ←" : "التالي ←");
+          next.dataset.action = "next";
+          next.addEventListener("click", () => stage3(order, idx + 1, score));
+          actions.appendChild(next);
+          reveal(actions, below);
+        } else {
+          firstTry = false;
+          b.classList.add("wrong");
+          b.disabled = true;
+          fb.className = "feedback bad";
+          fb.textContent = "ليس هذا. جرّب مرة أخرى، أو اضغط «أرني الأطباق»";
+        }
+      });
+      opts.appendChild(b);
+    });
+    card.append(showRow, plateArea, opts, fb, below);
+    app.appendChild(card);
+  }
+
+  function stage3End(score, total) {
+    newScreen(3);
+    const card = el("section", "card");
+    card.dataset.screen = "end";
+    card.appendChild(el("p", "prompt", "أنهيت تحدّي جدول ٢! 🎉"));
+    card.appendChild(el("p", "hint", "إجابات صحيحة من أول محاولة:"));
+    const r = el("div", "result-big", ar(score) + " من " + ar(total));
+    r.dataset.score = String(score);
+    card.appendChild(r);
+    const stars = score === total ? 3 : score >= 7 ? 2 : 1;
+    card.appendChild(el("div", "stars", "⭐".repeat(stars)));
+    card.appendChild(el("p", "hint",
+      score === total ? "ممتاز! تحفظ جدول ٢ كله." : "كل مرة تلعب تصير أسرع. استعن بالأطباق متى احتجت."));
+    const actions = el("div", "actions");
+    const again = el("button", "btn", "العب مرة أخرى 🔁");
+    again.dataset.action = "again";
+    again.addEventListener("click", () => stage3());
+    const restart = el("button", "btn secondary", "من البداية");
+    restart.addEventListener("click", () => stage1(0));
+    actions.append(again, restart);
+    card.appendChild(actions);
+    app.appendChild(card);
+  }
+
+  // ---------- navigation ----------
+  document.querySelectorAll(".stage-pill").forEach((p) =>
+    p.addEventListener("click", () => {
+      const s = Number(p.dataset.stage);
+      if (s === 1) stage1(0); else if (s === 2) stage2(); else stage3();
+    }));
+
+  stage1(0);
+})();
+</script>
+</body>
+</html>
