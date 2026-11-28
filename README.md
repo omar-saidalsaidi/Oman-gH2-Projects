@@ -10,3 +10,16 @@
 - **Video prompts drawer**: frame-accurate Midjourney v6 (`--ar 9:16`) start/end keyframe prompts and Kling AI / Runway Gen-3 image-to-video and bridge prompts, with Copy, Copy all, Markdown and JSON export. The same content is in [`oman-flag-threads/PROMPTS.md`](oman-flag-threads/PROMPTS.md).
 
 Keyboard: `Space` play/pause · `R` replay · `M` mute · `P` prompts.
+
+## مغامرة الهيدروجين الأخضر — Green Hydrogen Kids' Game
+
+`green-hydrogen-game/index.html` is a self-contained, Arabic (RTL) interactive game for children under 14 about green hydrogen. Open it in any browser; it works on phones, tablets and computers.
+
+Hydro, a friendly H₂ molecule, guides players through four stations, each worth up to 3 stars:
+
+1. **الإنتاج (Production)**: tap the sun and the wind turbine to make clean electricity, then run the electrolyser to split water into H₂ and O₂. Tapping the gas factory teaches the difference between grey and green hydrogen. A passing cloud shows why solar and wind work together.
+2. **التخزين (Storage)**: press and hold to compress hydrogen to 700 bar, then cool it to −253 °C until it turns liquid. Go past the green zone and the safety valve resets the tank.
+3. **النقل (Transport)**: rotate pipe pieces to connect the green plant to the city, then choose pipeline, truck or ship for three delivery cases (Duqm, a remote fuel station, export by sea).
+4. **الاستخدام (Use)**: solve riddles to send hydrogen to a fuel-cell school bus, a green-steel plant, a farm (ammonia fertiliser) and a ship, then see how a fuel cell turns H₂ + O₂ into electricity and water.
+
+The game ends with a printable-style certificate (شهادة مهندس الهيدروجين الأخضر) showing the child's name and stars. Each station shows "هل تعلم؟" facts, including Oman-specific ones (sun and wind in Dhofar and Duqm, the 2030 goal).

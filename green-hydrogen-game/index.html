@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>مغامرة الهيدروجين الأخضر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE occasion: a bright children's game
+   IDEA a journey of one hydrogen molecule (Hydro) through four stations, like a board-game route across Oman
+   PICTURE each station is a live, tappable scene: sun+wind+electrolyser, pressure gauge+tank, pipe puzzle, a city to power
+   COLOUR sky blue ground, sun yellow, hydrogen green, Oman red accent, navy ink
+   TYPE Baloo Bhaijaan 2 (display) + Tajawal (text)
+   LAYOUT laptop: station route on top, scene left, guide panel right; phone: route, scene (8:5), then panel */
+:root{color-scheme:light;--sky:#8fd8ff;--sky2:#d4f2ff;--sand:#f2cf86;--ink:#1d2a44;--sun:#ffc93c;--green:#1fa463;--green2:#d8f5e6;--red:#d62828;--card:#fff;--soft:#eef8ff}
+*{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;display:grid;grid-template-rows:auto minmax(0,1fr);background:linear-gradient(#5ec8f5,#bfeaff);color:var(--ink);font:17px/1.6 Tajawal,"Segoe UI",sans-serif;overflow-x:clip}
+h1,h2,.disp,button,svg text{font-family:"Baloo Bhaijaan 2",Tajawal,sans-serif}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding:max(10px,env(safe-area-inset-top,0px)) max(3vw,16px,env(safe-area-inset-right,0px)) 8px max(3vw,16px,env(safe-area-inset-left,0px))}
+h1{margin:0;font-size:clamp(24px,3vw,34px);line-height:1.05;letter-spacing:-.01em;color:#fff;text-shadow:0 3px 0 var(--ink);flex:1 1 220px}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+.st{display:flex;flex-direction:column;align-items:center;gap:0;padding:6px 14px;border-radius:16px;border:3px solid var(--ink);background:#fff;color:var(--ink);font-size:16px;font-weight:700;cursor:pointer;min-height:48px;line-height:1.2}
+.st small{font-size:14px;color:#c9ced8;letter-spacing:2px}
+.st small b{color:#f5a300;font-weight:800}
+.st[aria-current=true]{background:var(--sun);box-shadow:0 4px 0 var(--ink);transform:translateY(-2px)}
+.total{background:var(--ink);color:#fff;border-radius:14px;padding:6px 14px;font-weight:700;white-space:nowrap}
+main{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:14px;padding:4px max(3vw,16px,env(safe-area-inset-right,0px)) max(14px,env(safe-area-inset-bottom,0px)) max(3vw,16px,env(safe-area-inset-left,0px));min-height:0}
+.stage{position:relative;border-radius:26px;overflow:hidden;border:4px solid var(--ink);background:linear-gradient(var(--sky) 55%,var(--sand) 55%);box-shadow:0 6px 0 var(--ink);container-type:inline-size;min-height:0}
+.stage>svg{position:absolute;inset:0;width:100%;height:100%;user-select:none;-webkit-user-select:none}
+.panel{background:var(--card);border-radius:26px;border:4px solid var(--ink);box-shadow:0 6px 0 var(--ink);padding:16px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.panel h2{margin:0;font-size:30px;line-height:1.1;color:var(--green)}
+.guide{display:flex;gap:10px;align-items:flex-start}
+#mascot{flex:0 0 74px;display:block}
+.say{margin:0;background:var(--soft);border:3px solid var(--ink);border-radius:18px;padding:10px 12px;font-size:17px;font-weight:500;position:relative}
+.say.good{background:var(--green2)}
+.say.bad{background:#ffe1dc}
+.fact{background:#fff7d6;border-radius:18px;padding:10px 14px;border:3px dashed #e9b200}
+.fact b{font-family:"Baloo Bhaijaan 2";font-size:18px}
+.fact p{margin:2px 0 0}
+.big,.opt{font-size:19px;font-weight:700;border:3px solid var(--ink);border-radius:18px;padding:10px 16px;min-height:52px;cursor:pointer;background:var(--green);color:#fff;box-shadow:0 5px 0 var(--ink);touch-action:manipulation}
+.big:active,.opt:active,.big.hold{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.big:disabled{background:#b9c2cf;cursor:not-allowed}
+.big:focus-visible,.opt:focus-visible,.st:focus-visible,.tile:focus-visible{outline:4px solid var(--red);outline-offset:3px}
+.big.alt{background:var(--sun);color:var(--ink)}
+.meter{display:flex;justify-content:space-between;align-items:center;background:var(--ink);color:#fff;border-radius:14px;padding:8px 14px;font-weight:700}
+.meter b{font-family:"Baloo Bhaijaan 2";font-size:24px;color:var(--sun);white-space:nowrap}
+.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.opt{background:#fff;color:var(--ink);padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:16px}
+.opt svg{width:54px;height:34px}
+.opt.ok{background:var(--green2)}
+.opt.no{background:#ffe1dc}
+.q{margin:0;font-weight:700}
+#next{margin-top:auto}
+.tap{cursor:pointer}
+.pop{animation:pop .35s}
+@keyframes pop{50%{transform:scale(1.12)}}
+.pop,.hs{transform-box:fill-box;transform-origin:center}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#blades{transform-origin:520px 160px;animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#cloud{transition:transform 1.1s ease-in-out;transform:translateX(300px)}
+#cloud.over{transform:none}
+.cab{fill:none;stroke:#b9c2cf;stroke-width:7;stroke-linecap:round}
+.cab.live{stroke:#ffd23f;stroke-dasharray:14 10;animation:flow .6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-24}}
+.bub{animation:rise 1.9s ease-out both}
+@keyframes rise{from{transform:translateY(0);opacity:1}to{transform:translateY(-190px);opacity:0}}
+.smoke circle{animation:smoke 3s ease-out infinite;transform-box:fill-box}
+@keyframes smoke{from{transform:translate(0,0);opacity:.8}to{transform:translate(-30px,-70px) scale(1.8);opacity:0}}
+.pipes{position:absolute;inset:0;display:grid;place-content:center;grid-template-columns:repeat(7,var(--t));grid-template-rows:repeat(4,var(--t));--t:min(84px,13.2cqw);direction:ltr;background:radial-gradient(circle at 30% 20%,#fff8,transparent 50%),linear-gradient(#c8f0d6,#a8e2bd)}
+.tile{width:var(--t);height:var(--t);padding:0;border:2px solid #7fc39a;background:#e9fbef;cursor:pointer;border-radius:10px;touch-action:manipulation}
+.tile svg{width:100%;height:100%;display:block;transition:transform .2s}
+.tile .in{stroke:#c7cfda}
+.tile.on .in{stroke:var(--green);stroke-dasharray:12 8;animation:flow .5s linear infinite}
+.tile.on{background:#fff}
+.end{display:flex;align-items:center;justify-content:center}
+.end svg{width:100%;height:100%}
+.hs{cursor:pointer;opacity:.55;transition:opacity .3s}
+.hs.lit{opacity:1}
+.ln{fill:none;stroke:var(--green);stroke-width:7;stroke-dasharray:14 10;opacity:0;transition:opacity .4s}
+.ln.lit{opacity:1;animation:flow .6s linear infinite}
+.ov{position:fixed;inset:0;background:#1d2a44cc;display:grid;place-items:center;padding:16px;z-index:9}
+.card{background:#fff;border:5px solid var(--ink);border-radius:30px;max-width:560px;width:100%;padding:24px;text-align:center;box-shadow:0 8px 0 var(--ink);max-height:100%;overflow:auto}
+.card h2{font-size:clamp(28px,5vw,40px);margin:4px 0;line-height:1.1;color:var(--green)}
+.card p{margin:8px 0}
+.cert{border:6px double var(--green);background:linear-gradient(#fffdf2,#fff7d6)}
+.cname{font-family:"Baloo Bhaijaan 2";font-size:34px;color:var(--red);min-height:1.3em;line-height:1.3}
+.card input{font:inherit;font-size:18px;padding:10px 14px;border:3px solid var(--ink);border-radius:14px;width:100%;max-width:320px;text-align:center}
+.bigstars{font-size:40px;color:#f5a300;letter-spacing:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
+.chips span{background:var(--green2);border-radius:99px;padding:4px 12px;font-weight:700}
+.cf{position:absolute;top:-20px;width:12px;height:18px;border-radius:3px;animation:fall 2.2s ease-in forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(700px) rotate(540deg)}}
+@media(max-width:820px){
+html,body{height:auto}
+body{display:block}
+main{grid-template-columns:minmax(0,1fr)}
+.stage{aspect-ratio:8/5;height:auto}
+.panel{overflow:visible}
+#mascot{flex-basis:60px}#mascot svg{width:60px}
+nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;order:3}
+.st{padding:4px 2px;font-size:15px}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+<h1>مغامرة الهيدروجين الأخضر</h1>
+<nav id="nav" aria-label="محطات الرحلة"></nav>
+<div class="total" id="total">النجوم 0 / 12</div>
+</header>
+<main>
+<section class="stage" id="stage" aria-live="polite"></section>
+<aside class="panel">
+<h2 id="lvTitle">الإنتاج</h2>
+<div class="guide"><span id="mascot"></span><p class="say" id="say"></p></div>
+<div id="ctrl"></div>
+<div class="fact"><b>هل تعلم؟</b><p id="fact"></p></div>
+<button class="big alt" id="next" hidden>المحطة التالية</button>
+</aside>
+</main>
+<div class="ov" id="ov" hidden></div>
+<script>
+{
+const $=id=>document.getElementById(id);
+const stage=$('stage');
+const NAMES=['الإنتاج','التخزين','النقل','الاستخدام'];
+let S={cur:0,stars:[0,0,0,0],name:''};
+let miss=0,timers=[],raf=0,factIx=0,facts=[];
+
+/* ---------- helpers ---------- */
+let ac=null;
+function beep(f,d,type){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(.12,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+(d||.15));o.connect(g).connect(ac.destination);o.start();o.stop(ac.currentTime+(d||.15))}catch(e){}}
+const good=()=>{beep(660,.12);setTimeout(()=>beep(990,.18),110)};
+const bad=()=>beep(180,.25,'square');
+function say(t,cls){const s=$('say');s.textContent=t;s.className='say'+(cls?' '+cls:'')}
+function setFacts(a){facts=a;factIx=0;$('fact').textContent=a[0]}
+function nextFact(){factIx=(factIx+1)%facts.length;$('fact').textContent=facts[factIx]}
+function ctrl(h){$('ctrl').innerHTML=h}
+function cleanup(){timers.forEach(t=>{clearInterval(t);clearTimeout(t)});timers=[];cancelAnimationFrame(raf);raf=0}
+function popEl(el){el.classList.remove('pop');void el.getBoundingClientRect();el.classList.add('pop')}
+function shakeEl(el){el.classList.remove('shake');void el.getBoundingClientRect();el.classList.add('shake')}
+function party(){const c=['#ffc93c','#1fa463','#d62828','#5ec8f5','#fff'];for(let i=0;i<34;i++){const d=document.createElement('div');d.className='cf';d.style.left=Math.random()*100+'%';d.style.background=c[i%5];d.style.animationDelay=Math.random()*.6+'s';stage.appendChild(d);setTimeout(()=>d.remove(),3200)}}
+function mascot(w,id){return `<svg viewBox="0 0 120 100" width="${w}" aria-hidden="true"><defs><radialGradient id="${id}" cx=".35" cy=".3"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#7fd0ff"/></radialGradient></defs><circle cx="40" cy="58" r="32" fill="url(#${id})" stroke="#1d2a44" stroke-width="4"/><circle cx="78" cy="50" r="36" fill="url(#${id})" stroke="#1d2a44" stroke-width="4"/><circle cx="66" cy="44" r="6" fill="#1d2a44"/><circle cx="88" cy="44" r="6" fill="#1d2a44"/><circle cx="68" cy="42" r="2" fill="#fff"/><circle cx="90" cy="42" r="2" fill="#fff"/><path d="M66 60 Q77 70 89 60" fill="none" stroke="#1d2a44" stroke-width="4" stroke-linecap="round"/><circle cx="58" cy="58" r="5" fill="#ff9fb0"/><circle cx="98" cy="57" r="5" fill="#ff9fb0"/><text x="40" y="68" text-anchor="middle" font-size="28" font-weight="800" fill="#1fa463">H</text></svg>`}
+$('mascot').innerHTML=mascot(74,'mg1');
+function starStr(n){return '<b>'+'★'.repeat(n)+'</b>'+'★'.repeat(3-n)}
+function renderNav(){
+  $('nav').innerHTML=NAMES.map((n,i)=>`<button class="st" data-i="${i}" aria-current="${i===S.cur}">${n}<small>${starStr(S.stars[i])}</small></button>`).join('');
+  const t=S.stars.reduce((a,b)=>a+b,0);$('total').textContent='النجوم '+t+' / 12';
+}
+$('nav').addEventListener('click',e=>{const b=e.target.closest('.st');if(b)go(+b.dataset.i)});
+function finish(){
+  const st=Math.max(1,3-miss);S.stars[S.cur]=Math.max(S.stars[S.cur],st);renderNav();party();good();
+  const n=$('next');n.hidden=false;n.textContent=S.cur<3?'المحطة التالية: '+NAMES[S.cur+1]:'احصل على شهادتك';
+}
+$('next').onclick=()=>{if(S.cur<3)go(S.cur+1);else cert()};
+function go(i){cleanup();stage.style.background=['#5ec8f5','#e3f4ff','#b8e9c9','#5ec8f5'][i];S.cur=i;miss=0;$('next').hidden=true;$('lvTitle').textContent=NAMES[i];renderNav();LV[i]()}
+
+/* ---------- Station 1: production ---------- */
+function L1(){
+  let E=0,H=0,cloudy=false;const goal=12;
+  let rays='';for(let i=0;i<12;i++){const a=i*30*Math.PI/180;rays+=`<line x1="${660+Math.cos(a)*58}" y1="${92+Math.sin(a)*58}" x2="${660+Math.cos(a)*78}" y2="${92+Math.sin(a)*78}"/>`}
+  let blades='';for(const a of [0,120,240])blades+=`<path transform="rotate(${a} 520 160)" d="M520 160 L509 72 Q520 56 531 72 Z" fill="#fff" stroke="#1d2a44" stroke-width="3"/>`;
+  let panels='';for(let i=0;i<3;i++){const x=575+i*62;panels+=`<polygon points="${x},372 ${x+52},372 ${x+66},326 ${x+14},326" fill="#2b4f9e" stroke="#1d2a44" stroke-width="3"/><line x1="${x+7}" y1="349" x2="${x+59}" y2="349" stroke="#8fb4ff" stroke-width="2"/><line x1="${x+33}" y1="372" x2="${x+40}" y2="326" stroke="#8fb4ff" stroke-width="2"/><line x1="${x+26}" y1="372" x2="${x+26}" y2="392" stroke="#1d2a44" stroke-width="4"/>`}
+  stage.innerHTML=`<svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMax meet" role="img" aria-label="الشمس والرياح وجهاز التحليل الكهربائي">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5ec8f5"/><stop offset="1" stop-color="#d4f2ff"/></linearGradient></defs>
+  <rect width="800" height="500" fill="url(#sky)"/>
+  <path d="M0 330 L90 255 L170 300 L260 225 L360 300 L450 245 L560 310 L650 262 L800 318 V400 H0Z" fill="#c98b5e" opacity=".45"/>
+  <path d="M0 372 Q200 350 400 374 T800 366 V500 H0Z" fill="#f2cf86"/>
+  <path d="M0 440 Q250 418 500 440 T800 434 V500 H0Z" fill="#e8b866"/>
+  <g id="sun" class="tap"><g stroke="#f5a300" stroke-width="8" stroke-linecap="round">${rays}</g><circle cx="660" cy="92" r="48" fill="#ffc93c" stroke="#f29f05" stroke-width="6"/><circle cx="645" cy="86" r="5" fill="#1d2a44"/><circle cx="675" cy="86" r="5" fill="#1d2a44"/><path d="M645 104 Q660 116 675 104" fill="none" stroke="#1d2a44" stroke-width="4" stroke-linecap="round"/></g>
+  <g id="cloud" pointer-events="none"><ellipse cx="660" cy="104" rx="88" ry="34" fill="#fff"/><ellipse cx="620" cy="86" rx="44" ry="34" fill="#fff"/><ellipse cx="690" cy="76" rx="50" ry="40" fill="#fff"/><ellipse cx="660" cy="112" rx="80" ry="20" fill="#e3eef7"/></g>
+  <path class="cab" id="cab1" d="M520 386 Q480 410 432 360"/><path class="cab" id="cab2" d="M605 392 Q520 440 432 385"/>
+  <g id="turb" class="tap"><circle cx="520" cy="200" r="110" fill="transparent"/><polygon points="512,388 528,388 523,160 517,160" fill="#fff" stroke="#1d2a44" stroke-width="3"/><g id="blades">${blades}</g><circle cx="520" cy="160" r="11" fill="#d62828" stroke="#1d2a44" stroke-width="3"/></g>
+  <g id="solar">${panels}</g>
+  <g id="fac" class="tap"><rect x="132" y="196" width="26" height="90" fill="#6c757d" stroke="#1d2a44" stroke-width="3"/><path d="M36 380 V292 L76 266 V292 L116 266 V292 L170 266 V380Z" fill="#8d99ae" stroke="#1d2a44" stroke-width="4"/><rect x="56" y="320" width="24" height="24" fill="#5c6677"/><rect x="104" y="320" width="24" height="24" fill="#5c6677"/><g class="smoke" fill="#7b818a"><circle cx="145" cy="190" r="14"/><circle cx="145" cy="190" r="12" style="animation-delay:1s"/><circle cx="145" cy="190" r="10" style="animation-delay:2s"/></g><text x="103" y="372" text-anchor="middle" font-size="17" fill="#fff" font-weight="700">مصنع غاز</text></g>
+  <rect x="250" y="215" width="182" height="186" rx="18" fill="#e9f7ff" stroke="#1d2a44" stroke-width="5"/>
+  <rect x="258" y="262" width="166" height="132" rx="10" fill="#5ab8f0"/>
+  <path d="M258 270 q20 -9 41 0 t41 0 t41 0 t43 0" fill="none" stroke="#bfe6ff" stroke-width="4"/>
+  <line x1="341" y1="262" x2="341" y2="392" stroke="#fff" stroke-width="3" stroke-dasharray="6 6"/>
+  <rect x="287" y="232" width="16" height="140" rx="4" fill="#4a5568"/><rect x="379" y="232" width="16" height="140" rx="4" fill="#d62828"/>
+  <circle cx="295" cy="214" r="15" fill="#4a5568"/><text x="295" y="223" text-anchor="middle" font-size="26" fill="#fff" font-weight="800">−</text>
+  <circle cx="387" cy="214" r="15" fill="#d62828"/><text x="387" y="223" text-anchor="middle" font-size="26" fill="#fff" font-weight="800">+</text>
+  <text x="341" y="385" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">ماء H₂O</text>
+  <text x="341" y="430" text-anchor="middle" font-size="19" font-weight="700" fill="#1d2a44">جهاز التحليل الكهربائي</text>
+  <g id="bub"></g>
+  <g transform="translate(24,22)"><rect width="214" height="46" rx="12" fill="#fff" stroke="#1d2a44" stroke-width="4"/><rect x="214" y="15" width="9" height="16" rx="2" fill="#1d2a44"/><rect id="ebar" x="6" y="6" width="0" height="34" rx="8" fill="#1fa463"/><text id="etx" x="107" y="31" text-anchor="middle" font-size="19" font-weight="800" fill="#1d2a44">الكهرباء 0%</text></g>
+  </svg>`;
+  say('أهلاً! أنا هيدرو. اضغط على الشمس وتوربين الرياح لتوليد كهرباء نظيفة، ثم شغّل جهاز التحليل لتقسيم الماء.');
+  setFacts(['التحليل الكهربائي يقسم جزيء الماء H₂O إلى هيدروجين H₂ وأكسجين O₂.','يُسمّى الهيدروجين «أخضر» عندما تأتي الكهرباء من الشمس أو الرياح، فلا يخرج دخان.','عُمان فيها شمس قوية طوال السنة ورياح قوية في ظفار والدقم، لذلك هي مكان رائع لصنع الهيدروجين الأخضر.','نحتاج حوالي 9 لترات من الماء لصنع كيلوغرام واحد من الهيدروجين. في عُمان يمكن تحلية ماء البحر لذلك.','الهيدروجين أخف عنصر في الكون كله، وهو أيضاً الأكثر انتشاراً فيه.','تطمح عُمان لإنتاج حوالي مليون طن من الهيدروجين الأخضر كل سنة بحلول عام 2030.']);
+  ctrl(`<div class="meter"><span>الهيدروجين المُنتَج</span><b id="hc">0 / ${goal}</b></div><button class="big" id="run" style="width:100%;margin-top:10px" disabled>شغّل التحليل الكهربائي</button>`);
+  const upd=()=>{E=Math.min(100,E);$('ebar').setAttribute('width',E/100*202);$('etx').textContent='الكهرباء '+Math.round(E)+'%';['cab1','cab2'].forEach(c=>$(c).classList.toggle('live',E>=25));$('run').disabled=E<25||H>=goal};
+  $('sun').onclick=()=>{popEl($('sun'));if(cloudy){E+=3;beep(300);say('غيمة تغطي الشمس! الألواح الشمسية تعطي كهرباء أقل. جرّب توربين الرياح.')}else{E+=12;beep(520);say('رائع! الألواح الشمسية تحوّل ضوء الشمس إلى كهرباء.','good')}upd()};
+  $('turb').onclick=()=>{E+=10;beep(440);const b=$('blades');b.style.animationDuration='.35s';timers.push(setTimeout(()=>b.style.animationDuration='',1500));say('ووش! الرياح تدير التوربين فيولّد كهرباء، حتى في الليل.','good');upd()};
+  $('fac').onclick=()=>{miss++;bad();shakeEl($('fac'));say('أوه! هذا المصنع يحرق الغاز ويُخرج ثاني أكسيد الكربون. هيدروجينه «رمادي». نحن نريد الأخضر!','bad')};
+  $('run').onclick=()=>{
+    if(E<25)return;E-=25;H+=2;
+    const g=$('bub'),mk=(x,lab,fill,d)=>`<g class="bub" style="animation-delay:${d}s"><circle cx="${x}" cy="340" r="17" fill="${fill}" stroke="#1d2a44" stroke-width="3"/><text x="${x}" y="347" text-anchor="middle" font-size="16" font-weight="800" fill="#1d2a44">${lab}</text></g>`;
+    g.insertAdjacentHTML('beforeend',mk(282,'H₂','#fff',0)+mk(310,'H₂','#fff',.35)+mk(372,'O₂','#9fd8ff',.15));
+    timers.push(setTimeout(()=>{while(g.childNodes.length>6)g.firstChild.remove()},2600));
+    good();$('hc').textContent=H+' / '+goal;nextFact();
+    say(H>=goal?'أحسنت! صنعنا هيدروجيناً أخضر نظيفاً. لكن أين نضعه؟ هيا إلى محطة التخزين!':'فقاعات! الهيدروجين يخرج عند القطب السالب (−) والأكسجين عند القطب الموجب (+).','good');
+    upd();if(H>=goal)timers.push(setTimeout(finish,900));
+  };
+  timers.push(setInterval(()=>{cloudy=true;$('cloud').classList.add('over');timers.push(setTimeout(()=>{cloudy=false;const c=$('cloud');if(c)c.classList.remove('over')},3800))},9000));
+  upd();
+}
+
+/* ---------- Station 2: storage ---------- */
+function L2(){
+  const R=[
+    {name:'الضغط',unit:' بار',from:0,to:800,zone:[660,740],btn:'اضغط باستمرار لضخ الغاز',intro:'الهيدروجين غاز خفيف جداً ويأخذ مكاناً كبيراً. لنضغطه داخل خزان سيارة! اضغط باستمرار على الزر حتى يصل المؤشر إلى المنطقة الخضراء (700 بار) ثم ارفع إصبعك.',mode:'p'},
+    {name:'التبريد',unit:'°C',from:25,to:-273,zone:[-262,-244],btn:'اضغط باستمرار للتبريد',intro:'طريقة أخرى: نبرّده كثيراً حتى يصبح سائلاً! اضغط باستمرار حتى تصل الحرارة إلى حوالي −253 درجة مئوية.',mode:'c'}
+  ];
+  setFacts(['خزان سيارة الهيدروجين يحفظ الغاز بضغط 700 بار، أي حوالي 700 مرة ضغط الهواء من حولنا.','يصبح الهيدروجين سائلاً عند −253 درجة مئوية، وهذا من أبرد الأشياء على الأرض!','يمكن ربط الهيدروجين مع النيتروجين لصنع الأمونيا، وهي أسهل في التخزين والنقل.','الخزانات مصنوعة من ألياف قوية جداً ولها صمّام أمان يُخرج الغاز إذا زاد الضغط.','يمكن تخزين كميات ضخمة من الهيدروجين في كهوف ملحية عميقة تحت الأرض.']);
+  let r=0,v=0,holding=false,last=0,done=false;
+  const P=[];for(let i=0;i<36;i++)P.push({x:505+Math.random()*180,y:150+Math.random()*225,f:1+Math.random()*2,p:Math.random()*6});
+  const pt=(v)=>{const th=Math.PI*(1-v);return [230+150*Math.cos(th),300-150*Math.sin(th)]};
+  const arc=(a,b,rad)=>{const t0=Math.PI*(1-a),t1=Math.PI*(1-b);return `M${230+rad*Math.cos(t0)} ${300-rad*Math.sin(t0)} A${rad} ${rad} 0 0 1 ${230+rad*Math.cos(t1)} ${300-rad*Math.sin(t1)}`};
+  function draw(){
+    const c=R[r];let za=(c.zone[0]-c.from)/(c.to-c.from),zb=(c.zone[1]-c.from)/(c.to-c.from);if(za>zb)[za,zb]=[zb,za];c.za=za;c.zb=zb;
+    let ticks='';for(let i=0;i<=4;i++){const vv=i/4,th=Math.PI*(1-vv);ticks+=`<text x="${230+178*Math.cos(th)}" y="${306-172*Math.sin(th)}" text-anchor="middle" font-size="17" font-weight="700" fill="#1d2a44">${Math.round(c.from+(c.to-c.from)*vv)}</text>`}
+    stage.innerHTML=`<svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMax meet" role="img" aria-label="مقياس وخزان الهيدروجين">
+    <rect width="800" height="500" fill="#e3f4ff"/><rect y="425" width="800" height="75" fill="#c4dcec"/>
+    <path d="M80 300 A150 150 0 0 1 380 300 Z" fill="#fff" stroke="#1d2a44" stroke-width="6"/>
+    <path d="${arc(0,1,126)}" fill="none" stroke="#dfe7ef" stroke-width="24"/>
+    <path d="${arc(zb,1,126)}" fill="none" stroke="#ff8a80" stroke-width="24"/>
+    <path d="${arc(za,zb,126)}" fill="none" stroke="#1fa463" stroke-width="24"/>
+    ${ticks}
+    <g id="needle"><line x1="230" y1="300" x2="118" y2="300" stroke="#d62828" stroke-width="8" stroke-linecap="round"/><circle cx="230" cy="300" r="15" fill="#1d2a44"/></g>
+    <rect x="140" y="318" width="180" height="54" rx="14" fill="#1d2a44"/><text id="rd" x="230" y="356" text-anchor="middle" font-size="30" font-weight="800" fill="#ffc93c"></text>
+    <text x="230" y="406" text-anchor="middle" font-size="22" font-weight="800" fill="#1d2a44">${c.mode==='p'?'مقياس الضغط':'مقياس الحرارة'}</text>
+    <path d="M320 345 Q420 345 480 260" fill="none" stroke="#1d2a44" stroke-width="10"/>
+    <defs><clipPath id="tc"><rect x="484" y="124" width="222" height="272" rx="66"/></clipPath></defs>
+    <rect x="575" y="94" width="40" height="30" rx="5" fill="#9aa5b8" stroke="#1d2a44" stroke-width="4"/>
+    <rect x="480" y="120" width="230" height="280" rx="70" fill="#f7fbff" stroke="#1d2a44" stroke-width="6"/>
+    <g clip-path="url(#tc)"><rect id="liq" x="480" y="400" width="230" height="0" fill="#8fd6ff"/><g id="pt">${P.map(()=>'<circle r="9" fill="#fff" stroke="#1d2a44" stroke-width="3"/>').join('')}</g><rect id="frost" x="480" y="120" width="230" height="280" fill="#dff6ff" opacity="0"/></g>
+    <rect x="480" y="120" width="230" height="280" rx="70" fill="none" stroke="#1d2a44" stroke-width="6"/>
+    <rect x="555" y="236" width="80" height="48" rx="12" fill="#1fa463" opacity=".9"/><text x="595" y="270" text-anchor="middle" font-size="28" font-weight="800" fill="#fff">H₂</text>
+    <text x="595" y="455" text-anchor="middle" font-size="21" font-weight="800" fill="#1d2a44">خزان الهيدروجين · الجولة ${r+1} من 2</text>
+    </svg>`;
+    say(c.intro);
+    ctrl(`<button class="big" id="hold" style="width:100%">${c.btn}</button>`);
+    const h=$('hold');
+    const start=e=>{if(done)return;e.preventDefault();holding=true;last=performance.now();h.classList.add('hold')};
+    const stop=()=>{if(!holding)return;holding=false;h.classList.remove('hold');check()};
+    h.addEventListener('pointerdown',start);['pointerup','pointerleave','pointercancel'].forEach(t=>h.addEventListener(t,stop));
+    h.addEventListener('keydown',e=>{if((e.key===' '||e.key==='Enter')&&!e.repeat)start(e)});h.addEventListener('keyup',e=>{if(e.key===' '||e.key==='Enter')stop()});
+    h.addEventListener('contextmenu',e=>e.preventDefault());
+  }
+  function check(){
+    const c=R[r];
+    if(v>c.zb){miss++;bad();v=0;shakeEl($('stage').firstElementChild);say(c.mode==='p'?'أكثر من اللازم! فتح صمّام الأمان وأخرج الغاز. جرّب مرة أخرى وارفع إصبعك عند المنطقة الخضراء.':'بردٌ زائد عن الحاجة يهدر الطاقة! لنبدأ من جديد ونتوقف عند المنطقة الخضراء.','bad')}
+    else if(v>=c.za){good();nextFact();
+      if(r===0){say('ممتاز! الخزان ممتلئ بضغط 700 بار. الآن جولة التبريد...','good');done=true;timers.push(setTimeout(()=>{r=1;v=0;done=false;draw()},1800))}
+      else{done=true;say('رائع! أصبح الهيدروجين سائلاً بارداً جداً. تعلّمت طريقتين للتخزين: الضغط والتبريد. هيا إلى النقل!','good');finish()}}
+    else say('جيد، استمر! اضغط مرة أخرى حتى تصل إلى المنطقة الخضراء.');
+  }
+  function loop(t){
+    const c=R[r];
+    if(holding){v+=(t-last)/1000*.24;if(v>=1){v=1;holding=false;$('hold')&&$('hold').classList.remove('hold');check()}}
+    last=t;
+    const n=$('needle');if(n){
+      n.setAttribute('transform',`rotate(${v*180} 230 300)`);
+      $('rd').textContent=Math.round(c.from+(c.to-c.from)*v)+c.unit;
+      const cs=$('pt').children,liquid=c.mode==='c'?Math.max(0,Math.min(1,(v-.8)/.14)):0;
+      const sp=c.mode==='c'?(1-v)*1.2+.08:1.4,amp=c.mode==='c'?16*(1-v)+1.5:14;
+      for(let i=0;i<cs.length;i++){const p=P[i];const vis=c.mode==='p'?i<6+v*30:true;const x=p.x+Math.sin(t/300*p.f*sp+p.p)*amp;let y=p.y+Math.cos(t/260*p.f*sp+p.p)*amp;y=y*(1-liquid)+(330+(i%6)*10)*liquid;cs[i].setAttribute('cx',x);cs[i].setAttribute('cy',y);cs[i].style.display=vis?'':'none'}
+      $('liq').setAttribute('y',400-liquid*90);$('liq').setAttribute('height',liquid*90);
+      $('frost').setAttribute('opacity',c.mode==='c'?v*.45:0);
+    }
+    raf=requestAnimationFrame(loop);
+  }
+  draw();raf=requestAnimationFrame(loop);
+}
+
+/* ---------- Station 3: transport ---------- */
+function L3(){
+  const N=1,E=2,So=4,W=8,DIR=[[N,-1,0,So],[E,0,1,W],[So,1,0,N],[W,0,-1,E]];
+  const rot=(m,r)=>{for(let i=0;i<r;i++)m=((m<<1)|(m>>3))&15;return m};
+  const PATH={'1,4':10,'1,3':6,'2,3':9,'2,2':10,'2,1':3,'1,1':12,'1,0':6,'2,0':9};
+  const T=[];
+  for(let r=0;r<4;r++)for(let c=0;c<5;c++){
+    const want=PATH[r+','+c];let base,ro;
+    if(want){base=(want===5||want===10)?5:3;let r0=0;while(rot(base,r0)!==want)r0++;ro=base===5?(r0+1)%4:(r0+1+Math.floor(Math.random()*3))%4}
+    else{base=[5,3,3,7][Math.floor(Math.random()*4)];ro=Math.floor(Math.random()*4)}
+    T.push({r,c,base,ro,deg:ro*90});
+  }
+  const arm={[N]:'M50 50 V0',[E]:'M50 50 H100',[So]:'M50 50 V100',[W]:'M50 50 H0'};
+  const tileSvg=b=>{const d=[N,E,So,W].filter(x=>b&x).map(x=>arm[x]).join(' ');return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="${d}" stroke="#7a8699" stroke-width="34" fill="none"/><path class="in" d="${d}" stroke-width="16" fill="none"/><circle cx="50" cy="50" r="17" fill="#7a8699"/></svg>`};
+  const plant=`<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="0" y="42" width="30" height="16" fill="#7a8699"/><rect x="22" y="18" width="70" height="66" rx="12" fill="#1fa463" stroke="#1d2a44" stroke-width="5"/><text x="57" y="62" text-anchor="middle" font-size="30" font-weight="800" fill="#fff">H₂</text><circle cx="80" cy="10" r="9" fill="#ffc93c"/></svg>`;
+  const city=`<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="70" y="42" width="30" height="16" fill="#7a8699"/><rect x="6" y="34" width="26" height="62" fill="#5ec8f5" stroke="#1d2a44" stroke-width="4"/><rect x="34" y="14" width="30" height="82" fill="#ffc93c" stroke="#1d2a44" stroke-width="4"/><rect x="64" y="56" width="22" height="40" fill="#d62828" stroke="#1d2a44" stroke-width="4"/><g fill="#1d2a44"><rect x="42" y="24" width="6" height="8"/><rect x="52" y="24" width="6" height="8"/><rect x="42" y="40" width="6" height="8"/><rect x="52" y="40" width="6" height="8"/><rect x="13" y="44" width="6" height="8"/><rect x="13" y="60" width="6" height="8"/></g></svg>`;
+  let cells='';
+  for(let r=0;r<4;r++){
+    cells+=r===2?`<div class="end" style="grid-row:${r+1};grid-column:1">${city}</div>`:`<div style="grid-row:${r+1};grid-column:1"></div>`;
+    for(let c=0;c<5;c++){const i=r*5+c;cells+=`<button class="tile" data-i="${i}" style="grid-row:${r+1};grid-column:${c+2}" aria-label="أنبوب، اضغط للتدوير">${tileSvg(T[i].base).replace('<svg','<svg style="transform:rotate('+T[i].deg+'deg)"')}</button>`}
+    cells+=r===1?`<div class="end" style="grid-row:${r+1};grid-column:7">${plant}</div>`:`<div style="grid-row:${r+1};grid-column:7"></div>`;
+  }
+  stage.innerHTML=`<div class="pipes" id="pipes">${cells}</div>`;
+  say('خط الأنابيب مكسور! اضغط على قطع الأنابيب لتدويرها، وصِل المصنع الأخضر (يمين) بالمدينة (يسار).');
+  setFacts(['الأنابيب تنقل الهيدروجين مثل طريق سريع للغاز، بكميات كبيرة وبدون توقف.','الشاحنات تحمل الهيدروجين في أسطوانات مضغوطة إلى محطات التعبئة.','السفن تنقل الهيدروجين بعيداً عبر البحار، سائلاً أو على شكل أمونيا.','ميناء الدقم وميناء صلالة في عُمان قريبان من طرق السفن العالمية، وهذا يسهّل التصدير.']);
+  ctrl(`<div class="meter"><span>حالة الخط</span><b id="ps">غير متصل</b></div>`);
+  let solved=false;
+  const check=()=>{
+    const mk=t=>rot(t.base,t.ro),at=(r,c)=>T[r*5+c];const seen=new Set();let ok=false;
+    if(mk(at(1,4))&E){const q=[[1,4]];seen.add('1,4');
+      while(q.length){const [r,c]=q.shift();const m=mk(at(r,c));if(r===2&&c===0&&(m&W))ok=true;
+        for(const [b,dr,dc,op] of DIR){if(!(m&b))continue;const nr=r+dr,nc=c+dc;if(nr<0||nr>3||nc<0||nc>4)continue;if(!(mk(at(nr,nc))&op))continue;const k=nr+','+nc;if(!seen.has(k)){seen.add(k);q.push([nr,nc])}}}}
+    document.querySelectorAll('.tile').forEach(b=>{const t=T[+b.dataset.i];b.classList.toggle('on',seen.has(t.r+','+t.c))});
+    if(ok&&!solved){solved=true;good();$('ps').textContent='متصل!';say('وصل الهيدروجين إلى المدينة عبر الأنبوب! والآن: ما أفضل وسيلة نقل في كل حالة؟','good');nextFact();timers.push(setTimeout(quiz,1200))}
+  };
+  $('pipes').addEventListener('click',e=>{const b=e.target.closest('.tile');if(!b||solved)return;const t=T[+b.dataset.i];t.ro=(t.ro+1)%4;t.deg+=90;b.firstElementChild.style.transform='rotate('+t.deg+'deg)';beep(500,.06);check()});
+  check();
+  const ICON={pipe:'<svg viewBox="0 0 60 36"><rect x="2" y="12" width="56" height="12" rx="3" fill="#7a8699"/><rect x="18" y="8" width="6" height="20" fill="#1d2a44"/><rect x="38" y="8" width="6" height="20" fill="#1d2a44"/></svg>',truck:'<svg viewBox="0 0 60 36"><rect x="2" y="6" width="36" height="20" rx="6" fill="#1fa463"/><rect x="38" y="12" width="18" height="14" rx="3" fill="#d62828"/><circle cx="14" cy="29" r="5" fill="#1d2a44"/><circle cx="46" cy="29" r="5" fill="#1d2a44"/></svg>',ship:'<svg viewBox="0 0 60 36"><path d="M2 20 H58 L50 32 H10Z" fill="#1d2a44"/><rect x="14" y="10" width="12" height="10" fill="#1fa463"/><rect x="28" y="10" width="12" height="10" fill="#ffc93c"/><rect x="42" y="4" width="8" height="16" fill="#fff" stroke="#1d2a44" stroke-width="2"/></svg>'};
+  const LAB={pipe:'أنبوب',truck:'شاحنة',ship:'سفينة'};
+  const Q=[{q:'مصنع قريب في نفس المنطقة الصناعية بالدقم يحتاج الهيدروجين كل يوم. ما الأفضل؟',a:'pipe',why:'صحيح! الأنبوب ينقل كميات كبيرة باستمرار للمسافات القريبة.'},{q:'محطة تعبئة سيارات في مدينة لا تصلها الأنابيب. كيف نوصله؟',a:'truck',why:'صحيح! الشاحنة تحمل أسطوانات مضغوطة إلى أي مكان فيه طريق.'},{q:'نريد تصدير الهيدروجين إلى بلاد بعيدة عبر البحر.',a:'ship',why:'صحيح! السفينة تنقله لمسافات طويلة، سائلاً أو على شكل أمونيا.'}];
+  let qi=0;
+  function quiz(){
+    if(qi>=Q.length){say('أحسنت! أنت خبير نقل الهيدروجين. هيا نرى أين نستخدمه!','good');finish();return}
+    const x=Q[qi];
+    ctrl(`<p class="q">سؤال ${qi+1} من 3: ${x.q}</p><div class="opts">${['pipe','truck','ship'].map(k=>`<button class="opt" data-k="${k}">${ICON[k]}${LAB[k]}</button>`).join('')}</div>`);
+    $('ctrl').querySelector('.opts').onclick=e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;
+      if(b.dataset.k===x.a){b.classList.add('ok');good();say(x.why,'good');nextFact();$('ctrl').querySelectorAll('.opt').forEach(o=>o.disabled=true);qi++;timers.push(setTimeout(quiz,1700))}
+      else{b.classList.add('no');b.disabled=true;miss++;bad();say('فكّر مرة أخرى: كم المسافة؟ وهل يوجد بحر أو طريق؟','bad')}};
+  }
+}
+
+/* ---------- Station 4: use ---------- */
+function L4(){
+  let wheat='';for(let i=0;i<8;i++){const x=440+i*20;wheat+=`<path d="M${x} 408 Q${x+4} 380 ${x} 362" stroke="#2f8a3a" stroke-width="4" fill="none"/><ellipse cx="${x+1}" cy="360" rx="5" ry="10" fill="#f2c14e"/>`}
+  stage.innerHTML=`<svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMax meet" role="img" aria-label="مدينة تحتاج إلى الهيدروجين">
+  <defs><linearGradient id="sk4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5ec8f5"/><stop offset="1" stop-color="#d4f2ff"/></linearGradient></defs>
+  <rect width="800" height="500" fill="url(#sk4)"/>
+  <path d="M0 300 L120 250 L240 290 L330 240 L460 285 L560 250 L640 290 V330 H0Z" fill="#c98b5e" opacity=".4"/>
+  <rect y="330" width="800" height="170" fill="#f2cf86"/>
+  <path d="M610 360 Q700 350 800 356 V500 H600Z" fill="#2e8fd8"/><path d="M630 440 q20 -8 40 0 t40 0 t40 0 t40 0" stroke="#9fd8ff" stroke-width="4" fill="none"/>
+  <rect y="408" width="600" height="34" fill="#4a5568"/><path d="M10 425 H600" stroke="#fff" stroke-width="4" stroke-dasharray="22 18"/>
+  <path class="ln" id="ln-bus" d="M380 110 Q200 150 145 330"/><path class="ln" id="ln-steel" d="M395 120 Q350 170 335 225"/><path class="ln" id="ln-farm" d="M420 120 Q500 200 500 285"/><path class="ln" id="ln-ship" d="M440 110 Q660 140 705 335"/>
+  <g><rect x="335" y="50" width="130" height="66" rx="33" fill="#1fa463" stroke="#1d2a44" stroke-width="5"/><text x="400" y="95" text-anchor="middle" font-size="32" font-weight="800" fill="#fff">H₂</text></g>
+  <g class="hs" data-k="steel"><rect x="372" y="170" width="24" height="64" fill="#6c757d" stroke="#1d2a44" stroke-width="3"/><path d="M258 400 V250 L300 225 V250 L342 225 V250 L410 228 V400Z" fill="#a3b1c6" stroke="#1d2a44" stroke-width="4"/><rect x="296" y="318" width="76" height="54" rx="8" fill="#ff7b00" stroke="#1d2a44" stroke-width="4"/><path d="M306 360 Q334 330 362 360" fill="#ffd23f"/><text x="334" y="300" text-anchor="middle" font-size="19" font-weight="800" fill="#1d2a44">مصنع الحديد</text></g>
+  <g class="hs" data-k="farm"><rect x="430" y="350" width="170" height="58" fill="#7cc576"/>${wheat}<rect x="520" y="282" width="70" height="68" fill="#d62828" stroke="#1d2a44" stroke-width="4"/><path d="M512 286 L555 252 L598 286Z" fill="#9e1b1b" stroke="#1d2a44" stroke-width="4"/><rect x="545" y="318" width="20" height="32" fill="#fff"/><text x="470" y="340" text-anchor="middle" font-size="19" font-weight="800" fill="#1d2a44">مزرعة</text></g>
+  <g class="hs" data-k="bus"><rect x="40" y="330" width="190" height="76" rx="16" fill="#ffc93c" stroke="#1d2a44" stroke-width="4"/><g fill="#bfe6ff" stroke="#1d2a44" stroke-width="3"><rect x="56" y="342" width="34" height="26" rx="4"/><rect x="98" y="342" width="34" height="26" rx="4"/><rect x="140" y="342" width="34" height="26" rx="4"/><rect x="182" y="342" width="34" height="26" rx="4"/></g><text x="135" y="396" text-anchor="middle" font-size="18" font-weight="800" fill="#1d2a44">حافلة مدرسية</text><circle cx="80" cy="408" r="15" fill="#1d2a44"/><circle cx="190" cy="408" r="15" fill="#1d2a44"/></g>
+  <g class="hs" data-k="ship"><path d="M628 384 H788 L766 424 H650Z" fill="#1d2a44"/><rect x="644" y="356" width="34" height="28" fill="#1fa463"/><rect x="680" y="356" width="34" height="28" fill="#ffc93c"/><rect x="730" y="332" width="40" height="52" fill="#fff" stroke="#1d2a44" stroke-width="4"/><text x="708" y="470" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">سفينة</text></g>
+  </svg>`;
+  const C=[{k:'bus',t:'أنقل الطلاب إلى المدرسة. داخلي خلية وقود تحوّل الهيدروجين إلى كهرباء، ولا يخرج مني إلا بخار الماء. من أنا؟',ok:'صحيح! حافلة الهيدروجين هادئة ونظيفة، وعادمها ماء فقط.'},{k:'steel',t:'أصنع الحديد للمباني والجسور. كنت أستخدم الفحم، والآن يمكنني استخدام الهيدروجين فأقلل الدخان كثيراً. من أنا؟',ok:'صحيح! «الحديد الأخضر» يُصنع بالهيدروجين بدل الفحم.'},{k:'farm',t:'أحتاج السماد لتنمو نباتاتي. السماد يُصنع من الأمونيا، والأمونيا تُصنع من الهيدروجين والنيتروجين. من أنا؟',ok:'صحيح! الهيدروجين الأخضر يساعد في صنع سماد نظيف للمزارع.'},{k:'ship',t:'أعبر البحار الواسعة، وأريد وقوداً نظيفاً مثل الأمونيا الخضراء المصنوعة من الهيدروجين. من أنا؟',ok:'صحيح! السفن يمكن أن تستخدم وقوداً من الهيدروجين بدل النفط.'}].sort(()=>Math.random()-.5);
+  setFacts(['خلية الوقود تجمع الهيدروجين مع أكسجين الهواء، فتنتج كهرباء وماء فقط.','الهيدروجين يُستخدم في صنع الأمونيا، ومنها تُصنع الأسمدة التي تُطعم مليارات الناس.','يمكن تخزين كهرباء الشمس على شكل هيدروجين، ثم استخدامها في الليل.','استبدال الفحم بالهيدروجين في مصانع الحديد يقلل التلوث بدرجة كبيرة.']);
+  let ci=0;
+  const show=()=>{ctrl(`<div class="meter"><span>أماكن مضاءة</span><b>${ci} / 4</b></div><p class="say" style="margin-top:10px;background:#fff7d6">${C[ci].t}</p>`)};
+  say('المدينة تحتاج طاقة نظيفة! اقرأ اللغز ثم اضغط على المكان الصحيح في الصورة لتوصل له الهيدروجين.');
+  show();
+  stage.querySelector('svg').addEventListener('click',e=>{
+    const h=e.target.closest('.hs');if(!h||ci>=4||h.classList.contains('lit'))return;
+    if(h.dataset.k===C[ci].k){h.classList.add('lit');$('ln-'+h.dataset.k).classList.add('lit');good();say(C[ci].ok,'good');nextFact();ci++;
+      if(ci<4)show();else{ctrl(fuelCell());say('أضأت المدينة كلها بالهيدروجين الأخضر! انظر كيف تعمل خلية الوقود: هيدروجين + أكسجين = كهرباء + ماء.','good');finish()}}
+    else{miss++;bad();shakeEl(h);say('ليس هذا. اقرأ اللغز مرة أخرى وابحث عن الكلمات المهمة.','bad')}
+  });
+}
+function fuelCell(){return `<svg viewBox="0 0 320 150" style="width:100%;height:auto" role="img" aria-label="خلية الوقود"><rect x="110" y="35" width="100" height="80" rx="14" fill="#1fa463" stroke="#1d2a44" stroke-width="4"/><text x="160" y="82" text-anchor="middle" font-size="17" font-weight="800" fill="#fff">خلية وقود</text><circle cx="40" cy="50" r="20" fill="#fff" stroke="#1d2a44" stroke-width="3"/><text x="40" y="57" text-anchor="middle" font-size="15" font-weight="800">H₂</text><circle cx="40" cy="105" r="20" fill="#9fd8ff" stroke="#1d2a44" stroke-width="3"/><text x="40" y="112" text-anchor="middle" font-size="15" font-weight="800">O₂</text><path d="M62 50 H106 M62 105 H106" stroke="#1d2a44" stroke-width="4" marker-end="url(#ar)"/><defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#1d2a44"/></marker></defs><path d="M214 55 H250 M214 100 H250" stroke="#1d2a44" stroke-width="4" marker-end="url(#ar)"/><path d="M272 30 L258 58 H272 L262 82 L292 48 H276 L286 30Z" fill="#ffc93c" stroke="#1d2a44" stroke-width="3"/><path d="M275 92 Q262 112 275 124 Q288 112 275 92Z" fill="#5ab8f0" stroke="#1d2a44" stroke-width="3"/><text x="275" y="145" text-anchor="middle" font-size="13" font-weight="700">كهرباء + ماء</text></svg>`}
+
+const LV=[L1,L2,L3,L4];
+
+/* ---------- overlays ---------- */
+function intro(){
+  const o=$('ov');o.hidden=false;
+  o.innerHTML=`<div class="card">${mascot(150,'mg2')}<h2>رحلة هيدرو</h2><p>أنا هيدرو، جزيء هيدروجين صغير! ساعدني في رحلتي من الشمس والرياح في عُمان حتى المدينة، واجمع النجوم في كل محطة.</p><div class="chips">${NAMES.map(n=>'<span>'+n+'</span>').join('')}</div><button class="big" id="go">ابدأ المغامرة</button></div>`;
+  $('go').onclick=()=>{o.hidden=true;beep(520);go(S.cur)};
+}
+function cert(){
+  const t=S.stars.reduce((a,b)=>a+b,0),d=new Date().toLocaleDateString('ar-OM',{year:'numeric',month:'long',day:'numeric'});
+  const o=$('ov');o.hidden=false;
+  o.innerHTML=`<div class="card cert">${mascot(110,'mg3')}<h2>شهادة مهندس الهيدروجين الأخضر</h2><p>تُمنح هذه الشهادة إلى</p><div class="cname" id="cn"></div><input id="nm" maxlength="40" placeholder="اكتب اسمك هنا" aria-label="اسمك"><p>لأنه أكمل رحلة الهيدروجين الأخضر وتعلّم:</p><div class="chips">${NAMES.map(n=>'<span>'+n+'</span>').join('')}</div><div class="bigstars">${'★'.repeat(t)}<span style="color:#d8dde5">${'★'.repeat(12-t)}</span></div><p><b>${t} من 12 نجمة</b> · ${d}</p><button class="big alt" id="again">العب من جديد</button> <button class="big" id="close">إغلاق</button></div>`;
+  const nm=$('nm');nm.value=S.name;$('cn').textContent=S.name||'...';
+  nm.oninput=()=>{S.name=nm.value;$('cn').textContent=nm.value||'...'};
+  $('again').onclick=()=>{S.stars=[0,0,0,0];o.hidden=true;go(0)};
+  $('close').onclick=()=>{o.hidden=true};
+  party();
+}
+
+/* ---------- boot ---------- */
+window.claude?.hot?.snapshot?.(()=>({cur:S.cur,stars:S.stars,name:S.name}));
+function start(d){
+  if(d&&Array.isArray(d.stars)){S.stars=d.stars.map(n=>Math.max(0,Math.min(3,+n||0)));S.cur=Math.max(0,Math.min(3,+d.cur||0));S.name=String(d.name||'')}
+  renderNav();$('lvTitle').textContent=NAMES[S.cur];stage.style.background=['#5ec8f5','#e3f4ff','#b8e9c9','#5ec8f5'][S.cur];LV[S.cur]();
+  if(!(d&&Array.isArray(d.stars)))intro();
+}
+window.claude?.hot?.ready?window.claude.hot.ready(start):start(window.claude?.hot?.data??{});
+}
+</script>
+</body>
+</html>
